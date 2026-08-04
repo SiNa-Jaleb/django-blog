@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Environment / Virtual Environments
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+env/
+
+# SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Django media & static
+MySite/media/
+MySite/staticfiles/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing & Type checking
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Packaging
+*.egg-info/
+build/
+dist/
+
+
+TODO.txt

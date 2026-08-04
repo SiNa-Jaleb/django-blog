@@ -1,0 +1,43 @@
+<header class="border-b border-slate-800 bg-[#111827]/80 backdrop-blur sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-6 flex-shrink-0">
+      <a href="{% url 'blog:index' %}" class="text-xl md:text-2xl font-black text-lime-500 tracking-wider">TECH<span class="text-white">BLOG</span></a>
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
+        <a href="{% url 'blog:index' %}" class="text-slate-400 hover:text-white transition">صفحه اصلی</a>
+        <a href="{% url 'blog:post_list' %}" class="text-slate-400 hover:text-white transition">همه پست‌ها</a>
+      </nav>
+    </div>
+
+    <div class="flex-grow max-w-md hidden md:block">
+      <form action="{% url 'blog:search' %}" method="GET" class="relative flex items-center bg-[#151f32] border border-slate-700/50 rounded-lg p-1 focus-within:border-lime-500/80 transition-all duration-300">
+        <input type="text" name="query" placeholder="جستجو در بین مقالات..." class="w-full bg-transparent text-white placeholder-slate-500 pr-3 pl-10 py-1.5 text-xs outline-none border-none" required />
+        <button type="submit" class="absolute left-2 text-slate-400 hover:text-lime-500 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.603 10.601Z" />
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    {% if request.user.is_authenticated %}
+      <div class="flex items-center gap-4 flex-shrink-0">
+        <a href="{% url "blog:profile" %}" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition shadow-lg shadow-lime-500/10">{{ request.user.username }}</a>
+      </div>
+    {% else %}
+      <div class="flex items-center gap-4 flex-shrink-0">
+        <a href="{% url 'blog:login' %}" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition shadow-lg shadow-lime-500/10">ثبت نام یا ورود</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="md:hidden px-4 pb-3 pt-1 border-t border-slate-800/60 bg-[#111827]">
+    <form action="#" method="GET" class="relative flex items-center bg-[#151f32] border border-slate-700/50 rounded-lg p-1">
+      <input type="text" name="query" placeholder="جستجو..." class="w-full bg-transparent text-white placeholder-slate-500 pr-3 pl-10 py-1.5 text-xs outline-none" required />
+      <button type="submit" class="absolute left-2 text-slate-400">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.603 10.601Z" />
+        </svg>
+      </button>
+    </form>
+  </div>
+</header>

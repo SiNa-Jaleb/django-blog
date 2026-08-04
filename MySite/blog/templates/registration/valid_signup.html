@@ -1,0 +1,14 @@
+{% extends 'parent/base.html' %}
+{% load blog_tags %}
+{% load jformat %}
+{% block title %}
+  ورود | ثبت نام
+{% endblock %}
+
+{% block body %}
+<h2>ثبت نام با موفقیت انجام شد</h2>
+<a href="{% url "blog:login" %}">بازگشت به صفحه ورود</a>
+
+{% endblock body %}
+
+

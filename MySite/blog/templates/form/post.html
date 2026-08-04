@@ -1,0 +1,194 @@
+{% extends "parent/base.html" %}
+{% block title %}
+    مدیریت پست
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0b0f19',
+                        darkcard: '#151f32',
+                        'lime-neon': '#84cc16'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Shabnam', sans-serif;
+            background-color: #0b0f19;
+        }
+        .neon-glow {
+            box-shadow: 0 0 25px rgba(132, 204, 22, 0.15);
+        }
+        .neon-border-focus:focus {
+            border-color: #84cc16;
+            box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+
+    <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="absolute w-96 h-96 bg-lime-500/5 blur-[140px] rounded-full top-10 right-10"></div>
+        <div class="absolute w-96 h-96 bg-blue-500/5 blur-[140px] rounded-full bottom-10 left-10"></div>
+
+        <div class="w-full max-w-2xl bg-darkcard border border-slate-800 rounded-2xl p-6 md:p-8 neon-glow relative z-10">
+
+            <div class="border-b border-slate-800 pb-4 mb-6">
+                <h1 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
+                    مدیریت و ویرایش پست
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">اطلاعات پست خود را در فرم زیر وارد و تنظیم کنید.</p>
+            </div>
+
+            <form method="post" class="space-y-6" enctype="multipart/form-data">
+            {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5 font-medium">عنوان پست</label>
+                    <input value="{{ post_form.title.value|default:'' }}" name="title" type="text" placeholder="یک عنوان جذاب بنویسید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+                    {% if post_form.title.errors %}
+                        <p class="text-red-500 text-[11px] mt-1 font-medium">{{ post_form.title.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1.5 font-medium">مدت زمان مطالعه (دقیقه)</label>
+                        <input value="{{ post_form.study.value|default:'' }}" name="study" type="number" placeholder="مثال: 5" min="1" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+                        {% if post_form.study.errors %}
+                            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ post_form.study.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1.5 font-medium">دسته‌بندی</label>
+                        <div class="relative">
+                            <select name="category" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200 appearance-none cursor-pointer">
+                                <option value="">انتخاب دسته‌بندی...</option>
+                                <option value="برنامه نویسی" {% if post_form.category.value == "برنامه نویسی" %}selected{% endif %} >برنامه نویسی</option>
+                                <option value="تکنولوژی" {% if post_form.category.value == "تکنولوژی" %}selected{% endif %}>تکنولوژی</option>
+                                <option value="هوش مصنوعی" {% if post_form.category.value == "هوش مصنوعی" %}selected{% endif %}>هوش مصنوعی</option>
+                                <option value="بازی" {% if post_form.category.value == "بازی" %}selected{% endif %}>بازی</option>
+                                <option value="سایر" {% if post_form.category.value == "سایر" %}selected{% endif %}>سایر</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if images %}
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-2 font-medium">تصاویر فعلی پست (گالری موجود)</label>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-[#0b0f19] border border-slate-800 p-3 rounded-lg mb-4">
+
+                            {% for image in images %}
+                                <div class="relative group aspect-video rounded-md overflow-hidden border border-slate-700/40 bg-slate-900">
+                                    <img src="{{ image.image_file.url }}" alt="{{ image.post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-200 flex items-center justify-center">
+                                        <button onclick="location.href='{% url "blog:delete_photo" image.id %}'" type="button" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 p-2 rounded-full border border-red-500/30 transition text-xs font-bold flex items-center gap-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-1.8c0-.621-.504-1.125-1.125-1.125h-2.25c-.621 0-1.125.504-1.125 1.125v1.8M7.5 9.75h9" /></svg>
+                                            حذف
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-xs text-slate-400 font-medium">افزودن تصاویر جدید</label>
+                        <button type="button" onclick="addNewImageField()" class="text-[11px] text-lime-400 hover:text-lime-300 flex items-center gap-1 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            افزودن تصویر دیگر
+                        </button>
+                    </div>
+
+                    <div id="image-fields-container" class="space-y-3">
+                        <div class="flex items-center gap-3 bg-[#0b0f19] p-3 rounded-lg border border-slate-700/60" id="image-group-1">
+                            <input type="file" name="images" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 file:cursor-pointer" />
+                            <button type="button" onclick="removeImageField('image-group-1')" class="text-slate-500 hover:text-red-400 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-1.8c0-.621-.504-1.125-1.125-1.125h-2.25c-.621 0-1.125.504-1.125 1.125v1.8M7.5 9.75h9" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label  class="block text-xs text-slate-400 mb-1.5 font-medium">متن و توضیحات پست</label>
+                    <textarea name="description" rows="8" placeholder="محتوای اصلی مقاله را اینجا بنویسید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200 resize-y">{{ post_form.description.value|default:'' }}</textarea>
+                    {% if post_form.description.errors %}
+                        <p class="text-red-500 text-[11px] mt-1 font-medium">{{ post_form.description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
+                    <button type="button" class="px-4 py-2.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white bg-slate-800/40 hover:bg-slate-800 transition">انصراف</button>
+                    <button type="submit" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-6 py-2.5 rounded-lg text-xs transition duration-200 active:scale-[0.98] shadow-md shadow-lime-500/10">
+                        ثبت تغییرات پست
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <script>
+        let imageFieldCount = 1;
+
+        function addNewImageField() {
+            imageFieldCount++;
+            const container = document.getElementById('image-fields-container');
+
+            const newField = document.createElement('div');
+            newField.className = "flex items-center gap-3 bg-[#0b0f19] p-3 rounded-lg border border-slate-700/60";
+            newField.id = `image-group-${imageFieldCount}`;
+
+            newField.innerHTML = `
+        <input type="file" name="images" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 file:cursor-pointer" />
+        <button type="button" onclick="removeImageField('image-group-${imageFieldCount}')" class="text-slate-500 hover:text-red-400 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-1.8c0-.621-.504-1.125-1.125-1.125h-2.25c-.621 0-1.125.504-1.125 1.125v1.8M7.5 9.75h9" /></svg>
+        </button>
+      `;
+
+            container.appendChild(newField);
+        }
+
+        function removeImageField(fieldId) {
+            const container = document.getElementById('image-fields-container');
+            if (container.children.length > 1) {
+                document.getElementById(fieldId).remove();
+            }
+        }
+    </script>
+
+{% endblock %}

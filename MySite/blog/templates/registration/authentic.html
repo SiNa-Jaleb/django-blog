@@ -1,0 +1,271 @@
+{% extends 'parent/base.html' %}
+{% load blog_tags %}
+{% load jformat %}
+{% block title %}
+  ورود | ثبت نام
+{% endblock %}
+
+{% block head %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            darkbg: '#0b0f19',
+            darkcard: '#151f32',
+            'lime-neon': '#84cc16'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Shabnam', sans-serif;
+      background-color: #0b0f19;
+    }
+    .neon-glow {
+      box-shadow: 0 0 25px rgba(132, 204, 22, 0.15);
+    }
+    .neon-border-focus:focus {
+      border-color: #84cc16;
+      box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden" data-active-tab="{{ active_tab|default:'login' }}">
+    <div class="absolute w-72 h-72 bg-lime-500/5 blur-[120px] rounded-full top-1/4 right-1/4"></div>
+    <div class="absolute w-72 h-72 bg-blue-500/5 blur-[120px] rounded-full bottom-1/4 left-1/4"></div>
+
+    <div class="w-full max-w-md bg-darkcard border border-slate-800 rounded-2xl p-6 md:p-8 neon-glow relative z-10">
+      {% if messages %}
+        <div class="space-y-3 mb-6 font-medium text-xs">
+          {% for message in messages %}
+            <div class="flex items-center justify-between p-3.5 rounded-xl border {% if message.tags == 'error' %}
+                 bg-red-500/5 border-red-500/30 text-red-400
+              {% else %}                
+                bg-lime-500/5 border-lime-500/30 text-lime-400
+              {% endif %}"
+              id="msg-{{ forloop.counter }}">
+              <div class="flex items-center gap-2">
+                {% if message.tags == 'error' %}
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 flex-shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008h-.008v-.008Z" />
+                  </svg>
+                {% else %}
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 flex-shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                {% endif %}
+                <span>{{ message }}</span>
+              </div>
+              <button type="button" onclick="document.getElementById('msg-{{ forloop.counter }}').remove()" class="text-slate-500 hover:text-white text-base font-bold transition pr-2">×</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="flex border-b border-slate-800 mb-8 relative">
+        <button id="tab-login" onclick="switchForm('login')" class="flex-1 pb-3 text-center font-bold text-sm text-lime-400 border-b-2 border-lime-500 transition-all duration-300">ورود به حساب</button>
+        <button id="tab-signup" onclick="switchForm('signup')" class="flex-1 pb-3 text-center font-bold text-sm text-slate-400 border-b-0 transition-all duration-300">ثبت نام جدید</button>
+      </div>
+
+      <form id="form-login" action="{% url 'blog:login' %}" method="post" class="space-y-5">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">نام کاربری (Username)</label>
+          <input type="text" name="username" required placeholder="username" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">رمز عبور</label>
+          <div class="relative flex items-center">
+            <input type="password" id="login-pass" name="password" required placeholder="••••••••" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg pr-3 pl-10 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+            <button type="button" onclick="togglePassword('login-pass', this)" class="absolute left-3 text-slate-500 hover:text-slate-300 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <a href="{% url 'blog:password_reset' %}" class="text-[11px] text-slate-400 hover:text-lime-400 transition">رمز عبور خود را فراموش کرده‌اید؟</a>
+        </div>
+
+        <button type="submit" name="action" value="login" class="w-full bg-lime-500 hover:bg-lime-600 text-darkbg font-bold py-2.5 rounded-lg text-xs transition duration-200 active:scale-[0.98] shadow-md shadow-lime-500/10">ورود امن به سیستم</button>
+      </form>
+
+      <form id="form-signup" action="{% url 'blog:register' %}" method="post" class="space-y-5 hidden">
+        {% csrf_token %}
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">نام کاربری (Username)</label>
+          <input type="text"
+            name="username"
+            value="{{ form.username.value|default:'' }}"
+            required
+            placeholder="مثال: s_jalali"
+            class="w-full bg-[#0b0f19] border {% if form.username.errors %}
+              border-red-500/80
+            {% else %}
+              border-slate-700/60
+            {% endif %} rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+          {% if form.username.errors %}
+            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.username.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">نام</label>
+          <input type="text"
+            name="first_name"
+            value="{{ form.first_name.value|default:'' }}"
+            required
+            placeholder="مثال: صدرا"
+            class="w-full bg-[#0b0f19] border {% if form.first_name.errors %}
+              border-red-500/80
+            {% else %}
+              border-slate-700/60
+            {% endif %} rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+          {% if form.first_name.errors %}
+            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.first_name.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">نام خانوادگی</label>
+          <input type="text"
+            name="last_name"
+            value="{{ form.last_name.value|default:'' }}"
+            required
+            placeholder="مثال: علوی"
+            class="w-full bg-[#0b0f19] border {% if form.last_name.errors %}
+              border-red-500/80
+            {% else %}
+              border-slate-700/60
+            {% endif %} rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+          {% if form.last_name.errors %}
+            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.last_name.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">آدرس ایمیل</label>
+          <input type="email"
+            name="email"
+            value="{{ form.email.value|default:'' }}"
+            required
+            placeholder="name@example.com"
+            class="w-full bg-[#0b0f19] border {% if form.email.errors %}
+              border-red-500/80
+            {% else %}
+              border-slate-700/60
+            {% endif %} rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+          {% if form.email.errors %}
+            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.email.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">رمز عبور</label>
+          <div class="relative flex items-center">
+            <input type="password"
+              id="signup-pass"
+              name="password"
+              required
+              placeholder="••••••••"
+              class="w-full bg-[#0b0f19] border {% if form.password.errors %}
+                border-red-500/80
+              {% else %}
+                border-slate-700/60
+              {% endif %} rounded-lg pr-3 pl-10 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+            <button type="button" onclick="togglePassword('signup-pass', this)" class="absolute left-3 text-slate-500 hover:text-slate-300 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+            </button>
+          </div>
+          {% if form.password.errors %}
+            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.password.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-400 mb-1.5 font-medium">تکرار رمز عبور</label>
+          <div class="relative flex items-center">
+            <input type="password"
+              id="signup-confirm-pass"
+              name="password2"
+              required
+              placeholder="••••••••"
+              class="w-full bg-[#0b0f19] border {% if form.password2.errors %}
+                border-red-500/80
+              {% else %}
+                border-slate-700/60
+              {% endif %} rounded-lg pr-3 pl-10 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+            <button type="button" onclick="togglePassword('signup-confirm-pass', this)" class="absolute left-3 text-slate-500 hover:text-slate-300 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+            </button>
+          </div>
+          {% if form.password2.errors %}
+            <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.password2.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <button type="submit" name="action" value="signup" class="w-full bg-lime-500 hover:bg-lime-600 text-darkbg font-bold py-2.5 rounded-lg text-xs transition duration-200 active:scale-[0.98] shadow-md shadow-lime-500/10">ساخت حساب کاربری</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // ۱. منطق سوییچ کردن فرم‌ها
+    function switchForm(type) {
+      const loginForm = document.getElementById('form-login')
+      const signupForm = document.getElementById('form-signup')
+      const loginTab = document.getElementById('tab-login')
+      const signupTab = document.getElementById('tab-signup')
+    
+      if (type === 'login') {
+        loginForm.classList.remove('hidden')
+        signupForm.classList.add('hidden')
+    
+        loginTab.className = 'flex-1 pb-3 text-center font-bold text-sm text-lime-400 border-b-2 border-lime-500 transition-all duration-300 cursor-pointer'
+        signupTab.className = 'flex-1 pb-3 text-center font-bold text-sm text-slate-400 border-b-0 transition-all duration-300 cursor-pointer'
+      } else {
+        loginForm.classList.add('hidden')
+        signupForm.classList.remove('hidden')
+    
+        loginTab.className = 'flex-1 pb-3 text-center font-bold text-sm text-slate-400 border-b-0 transition-all duration-300 cursor-pointer'
+        signupTab.className = 'flex-1 pb-3 text-center font-bold text-sm text-lime-400 border-b-2 border-lime-500 transition-all duration-300 cursor-pointer'
+      }
+    }
+    
+    // رفع خطای قرمز سنتاکس در VS Code با خواندن مقدار دیتا-اتریبیوت از تگ main
+    const mainContainer = document.querySelector('main')
+    if (mainContainer && mainContainer.getAttribute('data-active-tab') === 'signup') {
+      switchForm('signup')
+    }
+    
+    // ۲. منطق نمایش و مخفی‌سازی پسورد
+    function togglePassword(inputId, button) {
+      const input = document.getElementById(inputId)
+      if (input.type === 'password') {
+        input.type = 'text'
+        button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.815 7.815 3 3m-3-3-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>`
+      } else {
+        input.type = 'password'
+        button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>`
+      }
+    }
+  </script>
+{% endblock %}

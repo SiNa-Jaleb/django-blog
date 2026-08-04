@@ -1,0 +1,27 @@
+<div class="flex items-center justify-center gap-2">
+  {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#151f32] border border-slate-800 text-slate-400 text-xs hover:text-white transition">→</a>
+    {% if page.number > 3 %}
+      <a href="?page=1" class="w-9 h-9 flex items-center justify-center rounded-lg bg-lime-500 text-darkbg font-bold text-xs shadow-md shadow-lime-500/20">1</a>
+      {% if page.number > 4 %}
+        <span>...</span>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+
+  {% for num in page.paginator.page_range %}
+    {% if num <= page.number|add:'2' and num >= page.number|add:'-2' %}
+      <a href="?page={{ num }}" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#151f32] border border-slate-800 text-slate-400 font-bold text-xs hover:border-slate-700 hover:text-white transition">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if page.has_next %}
+    {% if page.number < page.paginator.num_pages|add:'-3' %}
+      <span>...</span>
+    {% endif %}
+    {% if page.number < page.paginator.num_pages|add:'-2' %}
+      <a href="?page={{ page.paginator.num_pages }}" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#151f32] border border-slate-800 text-slate-400 font-bold text-xs hover:border-slate-700 hover:text-white transition">{{ page.paginator.num_pages }}</a>
+    {% endif %}
+    <a href="?page={{ page.next_page_number }}" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[#151f32] border border-slate-800 text-slate-400 text-xs hover:text-white transition">←</a>
+  {% endif %}
+</div>

@@ -1,0 +1,280 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load blog_tags %}
+{% load jformat %}
+{% block title %}
+    پروفایل
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #05070f;
+        }
+        .neon-border-focus:focus {
+            box-shadow: 0 0 10px rgba(163, 230, 53, 0.3);
+            border-color: #a3e635;
+        }
+        .neon-shadow-lime {
+            box-shadow: 0 0 15px rgba(163, 230, 53, 0.15);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="md:col-span-1 space-y-6">
+            <div class="bg-[#0b0f19] border border-slate-800/80 rounded-2xl p-6 text-center neon-shadow-lime">
+                <div class="relative w-28 h-28 mx-auto mb-4">
+                    {% if user.account.photo %}
+                        <img src="{{ user.account.photo.url }}" alt="{{ user.account }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
+                    {% else %}
+                        <img src="{% static 'images/ava.jpeg' %}" alt="{{ user.username }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
+                    {% endif %}
+                </div>
+                <h2 class="text-lg font-bold text-white">{{ user.first_name }} {{ user.last_name }}</h2>
+                <p class="text-xs text-lime-400 font-medium tracking-wide mt-1">{{ user.username }}</p>
+                <p class="text-xs text-slate-400 mt-2">{{ user.email }}</p>
+
+                <hr class="border-slate-800/60 my-4" />
+
+                <div class="text-right text-xs text-slate-400 space-y-2">
+                    <div class="flex justify-between">
+                        <span>تاریخ عضویت:</span>
+                        <span class="text-slate-200 font-medium">{{ user.date_joined|jformat:'%Y/%m/%d' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#0b0f19] border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">عملیات حساب</h3>
+
+                <form method="get" action="{% url 'blog:create_post' %}">
+                    <button class="flex items-center justify-center gap-2 w-full bg-lime-500 hover:bg-lime-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition duration-200 active:scale-[0.98] shadow-md shadow-lime-500/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>ایجاد پست جدید
+                    </button>
+                </form>
+
+                <form method="get" action="{% url 'blog:ticket' %}">
+                    <button class="flex items-center justify-center gap-2 w-full bg-lime-500 hover:bg-lime-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition duration-200 active:scale-[0.98] shadow-md shadow-lime-500/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>ارسال تیکت
+                    </button>
+                </form>
+
+
+                <form method="post" action="{% url 'blog:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="flex items-center justify-center w-full bg-[#161f33] hover:bg-red-500/10 border border-slate-700/50 hover:border-red-500/50 text-slate-300 hover:text-red-400 font-medium py-2.5 rounded-xl text-xs transition duration-200">خروج از حساب کاربری</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-[#0b0f19] border border-slate-800/80 rounded-xl p-1.5 flex gap-2">
+                <button onclick="switchTab('edit-profile')" id="btn-edit-profile" class="tab-btn flex-1 py-2 text-xs font-bold rounded-lg transition duration-200 bg-lime-500 text-slate-950">اطلاعات کاربری</button>
+                <button onclick="switchTab('security')" id="btn-security" class="tab-btn flex-1 py-2 text-xs font-medium text-slate-400 rounded-lg transition duration-200 hover:text-white">امنیت حساب</button>
+                <button onclick="switchTab('activities')" id="btn-activities" class="tab-btn flex-1 py-2 text-xs font-medium text-slate-400 rounded-lg transition duration-200 hover:text-white">مدیریت مقالات</button>
+                <button onclick="switchTab('comments')" id="btn-comments" class="tab-btn flex-1 py-2 text-xs font-medium text-slate-400 rounded-lg transition duration-200 hover:text-white">مدیریت کامنت‌ها</button>
+            </div>
+
+            <div class="bg-[#0b0f19] border border-slate-800/80 rounded-2xl p-6 min-h-[400px]">
+                <div id="tab-edit-profile" class="tab-content space-y-5">
+                    <h3 class="text-sm font-bold text-white mb-4 border-r-2 border-lime-400 pr-2">ویرایش اطلاعات پروفایل</h3>
+                    {% if messages %}
+                        <div class="space-y-3 mb-6 font-medium text-xs">
+                            {% for message in messages %}
+                                <div class="flex items-center justify-between p-3.5 rounded-xl border {% if message.tags == 'error' %}
+                    
+                 bg-red-500/5 border-red-500/30 text-red-400
+
+                  {% else %}
+                                       
+                bg-lime-500/5 border-lime-500/30 text-lime-400
+
+                  {% endif %}"
+                                     id="msg-{{ forloop.counter }}">
+                                    <div class="flex items-center gap-2">
+                                        {% if message.tags == 'error' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 flex-shrink-0">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008h-.008v-.008Z" />
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 flex-shrink-0">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+                                        {% endif %}
+                                        <span>{{ message }}</span>
+                                    </div>
+                                    <button type="button" onclick="document.getElementById('msg-{{ forloop.counter }}').remove()" class="text-slate-500 hover:text-white text-base font-bold transition pr-2">×</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'blog:edit_account' %}" class="space-y-4" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1.5 font-medium">نام</label>
+                                <input name="first_name" type="text" value="{{ user_form.first_name.value|default:user.first_name }}" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition" />
+                                {% if user_form.first_name.errors %}
+                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ user_form.first_name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1.5 font-medium">نام خانوادگی</label>
+                                <input name="last_name" type="text" value="{{ user_form.last_name.value|default:user.last_name }}" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition" />
+                                {% if user_form.last_name.errors %}
+                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ user_form.last_name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1.5 font-medium">ایمیل</label>
+                                <input name="email" type="email" value="{{ user_form.email.value|default:user.email }}" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition" />
+                                {% if user_form.email.errors %}
+                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ user_form.email.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1.5 font-medium">شغل</label>
+                                <input name="job" type="text" value="{{ account_form.job.value|default:user.account.job }}" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition" />
+                                {% if account_form.job.errors %}
+                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ account_form.job.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1.5 font-medium">بیوگرافی (درباره شما)</label>
+                            <textarea name="bio" rows="4" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition resize-none">{{ account_form.bio.value|default:user.account.bio }}</textarea>
+                            {% if account_form.bio.errors %}
+                                <p class="text-red-500 text-[11px] mt-1 font-medium">{{ account_form.bio.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1.5 font-medium">تغییر تصویر پروفایل</label>
+                            <input name="photo" type="file" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer" />
+                        </div>
+                        <button type="submit" class="bg-lime-500 hover:bg-lime-600 text-slate-950 font-bold px-6 py-2 rounded-lg text-xs transition active:scale-[0.98]">ذخیره تغییرات</button>
+                    </form>
+                </div>
+
+                <div id="tab-security" class="tab-content hidden space-y-5">
+                    <h3 class="text-sm font-bold text-white mb-4 border-r-2 border-lime-400 pr-2">تغییر رمز عبور</h3>
+                    <form action="{% url 'blog:password_change' %}" class="space-y-4 max-w-sm">
+                        <button type="submit" class="bg-lime-500 hover:bg-lime-600 text-slate-950 font-bold px-6 py-2 rounded-lg text-xs transition active:scale-[0.98]">بروزرسانی رمز عبور</button>
+                    </form>
+                </div>
+
+                <div id="tab-activities" class="tab-content hidden space-y-5">
+                    <h3 class="text-sm font-bold text-white mb-4 border-r-2 border-lime-400 pr-2">لیست مقالات شما</h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs text-slate-300">
+                            <thead class="bg-[#05070f] text-slate-400 font-medium border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">عنوان مقاله</th>
+                                <th class="p-3 text-center">تاریخ انتشار</th>
+                                <th class="p-3 text-center">وضعیت</th>
+                                <th class="p-3 text-center">عملیات</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/40">
+                            {% for post in posts %}
+                                <tr class="hover:bg-[#111726]/30 transition">
+                                    <td class="p-3 font-medium text-white max-w-xs truncate">
+                                        {% if post.status == 'PB' %}
+                                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                                        {% else %}
+                                            {{ post.title }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="p-3 text-center text-slate-400">{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</td>
+                                    <td class="p-3 text-center">
+                                        {% if post.status == 'PB' %}
+                                            <span class="inline-block bg-green-500/10 border border-green-500/50 text-green-400 px-3 py-1 rounded-full text-xs font-medium">{{ post.status }}</span>
+                                        {% elif post.status == 'RJ' %}
+                                            <span class="bg-red-500/10 border border-red-500/50 text-red-400 px-3 py-1 rounded-full text-xs">{{ post.status }}</span>
+                                        {% else %}
+                                            <span class="g-yellow-500/10 border border-yellow-500/50 text-yellow-400 px-3 py-1 rounded-full text-xs">{{ post.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="p-3 text-center flex justify-center gap-2">
+                                        <button onclick="window.location.href='{% url 'blog:edit_post' post.id %}'" class="p-1.5 text-green-400 hover:bg-green-500/10 rounded-lg transition" title="ویرایش">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                            </svg>
+                                        </button>
+                                        <button onclick="if(confirm('آیا مطمئن هستید؟')) window.location.href='{% url 'blog:delete_post' post.id %}'" class="p-1.5 text-red-400 hover:bg-red-500/10 rounded-lg transition" title="حذف"><i class="fas fa-trash w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tab-comments" class="tab-content hidden space-y-5">
+                    <h3 class="text-sm font-bold text-white mb-4 border-r-2 border-lime-400 pr-2">آخرین کامنت‌های پست‌های شما</h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs text-slate-300">
+                            <thead class="bg-[#05070f] text-slate-400 font-medium border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">ارسال‌کننده</th>
+                                <th class="p-3">متن کامنت</th>
+                                <th class="p-3">مربوط به مقاله</th>
+                                <th class="p-3 text-center">تاریخ</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/40">
+                            {% for comment in comments %}
+                                <tr class="hover:bg-[#111726]/30 transition">
+                                    <td class="p-3 font-medium text-lime-400">{{ comment.author|truncatewords:2 }}</td>
+                                    <td class="p-3 text-slate-300 max-w-xs truncate">{{ comment.text|truncatewords:7 }}</td>
+                                    <td class="p-3 text-slate-400 max-w-xs truncate"><a href="{{ comment.post.get_absolute_url }}" class="hover:text-white transition">{{ comment.post|truncatewords:7 }}</a></td>
+                                    <td class="p-3 text-center text-slate-500 font-mono">{{ comment.create|jformat:"%Y/%m/%d" }}</td>
+                                </tr>
+                            {% empty %}
+                                <h2 class="neon-border-focus">کامنتی برای نمایش وجود ندارد</h2>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // پنهان کردن تمام تب‌ها
+            document.querySelectorAll('.tab-content').forEach((content) => content.classList.add('hidden'))
+
+            // نمایش تب انتخاب شده
+            document.getElementById('tab-' + tabId).classList.remove('hidden')
+
+            // ریست کردن استایل دکمه‌ها
+            document.querySelectorAll('.tab-btn').forEach((btn) => {
+                btn.classList.remove('bg-lime-500', 'text-slate-950', 'font-bold')
+                btn.classList.add('text-slate-400', 'font-medium')
+            })
+
+            // فعال کردن استایل دکمه فعال
+            const activeBtn = document.getElementById('btn-' + tabId)
+            activeBtn.classList.remove('text-slate-400', 'font-medium')
+            activeBtn.classList.add('bg-lime-500', 'text-slate-950', 'font-bold')
+        }
+    </script>
+{% endblock %}

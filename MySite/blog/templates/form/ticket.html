@@ -1,0 +1,149 @@
+{% extends "parent/base.html" %}
+
+{% block title %}
+    تیکت
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0b0f19',
+                        darkcard: '#151f32',
+                        'lime-neon': '#84cc16'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', 'Shabnam', sans-serif;
+            background-color: #0b0f19;
+        }
+        .neon-glow {
+            box-shadow: 0 0 25px rgba(132, 204, 22, 0.1);
+        }
+        .neon-border-focus:focus {
+            border-color: #84cc16;
+            box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+    <div class="absolute w-[500px] h-[500px] bg-lime-500/5 blur-[150px] rounded-full -top-40 -right-40 pointer-events-none"></div>
+    <div class="absolute w-[500px] h-[500px] bg-blue-500/5 blur-[150px] rounded-full bottom-0 -left-40 pointer-events-none"></div>
+
+    <main class="flex-grow container mx-auto max-w-6xl px-4 py-8 relative z-10">
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-5 mb-8 gap-4">
+            <div>
+                <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-lime-500 shadow-[0_0_8px_#84cc16]"></span>
+                    پیش‌خوان کاربری / تیکت‌های پشتیبانی
+                </h1>
+                <p class="text-xs text-slate-400 mt-1">در این بخش می‌توانید تیکت جدید ارسال کرده یا وضعیت مکاتبات قبلی را پیگیری کنید.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+
+
+            <div class="lg:col-span-2">
+                <div class="bg-darkcard border border-slate-800 rounded-2xl p-6 md:p-8 neon-glow">
+                    <div class="border-b border-slate-800 pb-4 mb-6">
+                        <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-lime-400"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
+                            ارسال تیکت پشتیبانی جدید
+                        </h2>
+                    </div>
+
+
+
+                    <form method="post" enctype="multipart/form-data" class="space-y-5">
+                        {% csrf_token %}
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1.5 font-medium">موضوع تیکت</label>
+                                <input value="{{ form.problem.value|default:"" }}" name="problem" type="text" placeholder="عنوان کوتاهی از مشکل خود بنویسید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" required />
+                                {% if form.problem.errors %}
+                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.problem.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1.5 font-medium">بخش مربوطه (دپارتمان)</label>
+                                <div class="relative">
+                                    <select name="subject" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200 appearance-none cursor-pointer" required>
+                                        <option value="">انتخاب بخش...</option>
+                                        <option value="پشتیبانی فنی" {% if form.subject.value == "پشتیبانی فنی" %}selected{% endif %}>پشتیبانی فنی</option>
+                                        <option value="باگ" {% if form.subject.value == "باگ" %}selected{% endif %}>گزارش باگ و خرابی</option>
+                                        <option value="حساب کاربری" {% if form.subject.value == "حساب کاربری" %}selected{% endif %}>مدیریت حساب کاربری</option>
+                                        <option value="پیشنهادات و انتقادات" {% if form.subject.value == "پیشنهادات و انتقادات" %}selected{% endif %}>پیشنهادات و انتقادات</option>
+                                    </select>
+                                    {% if form.subject.errors %}
+                                        <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.subject.errors.0 }}</p>
+                                    {% endif %}
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1.5 font-medium">متن پیام و توضیحات کامل</label>
+                            <textarea name="message" rows="7" placeholder="مشکل یا درخواست خود را با جزئیات کامل اینجا شرح دهید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200 resize-y" required>{{ form.message.value|default:"" }}</textarea>
+                            {% if form.message.errors %}
+                                <p class="text-red-500 text-[11px] mt-1 font-medium">{{ form.message.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1.5 font-medium">عکس ضمیمه (اختیاری)</label>
+                            <div class="flex items-center gap-3 bg-[#0b0f19] p-3 rounded-lg border border-slate-700/60">
+                                <input name="images" type="file" id="ticket-file" class="w-full text-xs text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 file:cursor-pointer" onchange="checkFileSize(this)" />
+                            </div>
+                            <p class="text-[10px] text-slate-500 mt-1"></p>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
+                            <button type="submit" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-6 py-2.5 rounded-lg text-xs transition duration-200 active:scale-[0.98] shadow-md shadow-lime-500/10">
+                                ثبت و ارسال تیکت
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // یک کنترل ساده برای حجم فایل آپلود شده در فرانت‌اند
+        function checkFileSize(input) {
+            if (input.files && input.files[0].size > 2 * 1024 * 1024) {
+                alert("حجم فایل انتخابی نباید بیشتر از ۲ مگابایت باشد.");
+                input.value = "";
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% load jformat %}
+{% for post in l_post %}
+  <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
+    <a href="{{ post.get_absolute_url }}">
+      <div class="w-full h-44 overflow-hidden bg-slate-950 relative">
+        <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+        <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
+      </div>
+    </a>
+    <div class="p-5 flex-grow">
+      <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+        <span>{{ post.study }} دقیقه مطالعه</span>
+      </div>
+      <h3 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+      <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10 }}</p>
+    </div>
+    <div class="px-5 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-xs text-slate-400">
+      <span><span>نویسنده: {{ post.author }}</span></span>
+      <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
+    </div>
+  </article>
+{% endfor %}

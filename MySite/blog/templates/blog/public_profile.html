@@ -1,0 +1,128 @@
+{% extends 'parent/base.html' %}
+{% load jformat %}
+{% load blog_tags %}
+{% block title %}
+    پروفایل عمومی نویسنده
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0b0f19',
+                        darkcard: '#151f32',
+                        'lime-neon': '#84cc16'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #0b0f19;
+        }
+        .neon-glow {
+            box-shadow: 0 0 25px rgba(132, 204, 22, 0.08);
+        }
+        .neon-border {
+            border-color: rgba(132, 204, 22, 0.2);
+        }
+        .neon-border:hover {
+            border-color: #84cc16;
+            box-shadow: 0 0 12px rgba(132, 204, 22, 0.2);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <!-- هاله‌های نوری پس‌زمینه -->
+    <div class="absolute w-[600px] h-[600px] bg-lime-500/5 blur-[160px] rounded-full -top-40 -right-40 pointer-events-none"></div>
+    <div class="absolute w-[500px] h-[500px] bg-blue-500/5 blur-[140px] rounded-full top-80 -left-40 pointer-events-none"></div>
+
+    <!-- بدنه اصلی صفحه پروفایل -->
+    <main class="max-w-6xl mx-auto px-4 py-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+            <!-- ================= ستون راست: کارت اطلاعات نویسنده (1 ستون) ================= -->
+            <div class="lg:col-span-1 lg:sticky lg:top-6 space-y-4">
+                <div class="bg-darkcard border border-slate-800 rounded-2xl overflow-hidden neon-glow relative">
+                    <!-- هاله خطی نئون بالای کارت -->
+                    <div class="h-1.5 w-full bg-gradient-to-l from-lime-500 to-emerald-500"></div>
+
+                    <div class="p-6 flex flex-col items-center text-center">
+                        <!-- تصویر آواتار بزرگ نویسنده با رینگ درخشان -->
+                        <div class="w-20 h-20 rounded-full bg-slate-900 border border-slate-700 p-1 mb-3 flex items-center justify-center shadow-inner overflow-hidden">
+                            <img src="{{ user.account.photo.url }}" alt="{{ user.username }}" class="w-full h-full rounded-full object-cover">
+                        </div>
+
+                        <!-- نام و مشخصات پایه -->
+                        <h1 class="text-base font-bold text-white mb-1">{{ user.first_name }} {{ user.last_name }}</h1>
+                        <span class="text-[11px] text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-md font-mono select-all">
+                        {{ user.email }}
+                        </span>
+
+                        <!-- بیوگرافی نویسنده -->
+                        <p class="text-xs text-slate-400 leading-relaxed mt-4 pt-4 border-t border-slate-800 w-full text-justify">
+                            {{ user.account.bio }}
+                        </p>
+
+                        <!-- باکس‌های کوچک آماری فعالیت -->
+                        <div class="grid grid-cols-2 gap-3 w-full mt-5 pt-4 border-t border-slate-800">
+                            {% more_info_pp user.id %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ستون چپ: لیست مقالات منتشر شده (2 ستون) ================= -->
+            <div class="lg:col-span-2 space-y-5">
+                <!-- عنوان و شمارشگر مقالات -->
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-2">
+                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-lime-500 rounded-full"></span>
+                        تمام مقالات این نویسنده
+                    </h2>
+                </div>
+
+                <!-- گرید کارت‌های مقالات -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for post in posts %}
+                        <!-- نمونه کارت مقاله ۱ -->
+                        <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
+                            <a href="{{ post.get_absolute_url }}">
+                                <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
+                                    <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                    <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
+                                </div>
+                            </a>
+
+                            <div class="p-6 flex-grow">
+                                <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+                                    <span>{{ post.study }} دقیقه مطالعه</span>
+                                </div>
+                                <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                                <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
+                            </div>
+                            <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
+                                <span>نویسنده: {{ post.author }}</span>
+                                <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                            </div>
+                        </article>
+
+                    {% empty %}
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2"> پستی برای نمایش وجود ندارد</h2>
+                    {% endfor %}
+
+                </div>
+                {% include "partials/pagination.html" with page=posts %}
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

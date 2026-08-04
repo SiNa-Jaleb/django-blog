@@ -1,0 +1,154 @@
+{% extends 'parent/base.html' %}
+{% load jformat %}
+{% block title %}
+  اعتبار سنجی کامنت
+{% endblock %}
+
+{% block head %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            darkbg: '#0b0f19',
+            darkcard: '#151f32',
+            'lime-neon': '#84cc16'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Shabnam', sans-serif;
+      background-color: #0b0f19;
+    }
+    
+    /* استایل سفارشی اسکرول‌بار */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #84cc16;
+      border-radius: 4px;
+    }
+    
+    .neon-glow:hover {
+      box-shadow: 0 0 15px rgba(132, 204, 22, 0.3);
+    }
+    .neon-border-focus:focus {
+      border-color: #84cc16;
+      box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  {% if comment %}
+    <h2>کامنت شما باموفقیت ثبت شد.منتظر تایید شدن توسط ادمین باشید</h2>
+    <a href="{{ post.get_absolute_url }}">بازگشت به پست</a>
+  {% else %}
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
+      <article>
+        <div class="w-full h-64 md:h-[400px] rounded-2xl overflow-hidden mb-8 relative border border-slate-800">
+          <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t map-bg from-darkbg via-transparent to-transparent opacity-90"></div>
+          <span class="absolute bottom-4 right-4 bg-lime-500 text-darkbg font-bold text-xs px-3 py-1 rounded-full shadow-lg shadow-lime-500/20">{{ post.category }}</span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-400 mb-4 border-b border-slate-800/60 pb-4">
+          <div class="flex items-center gap-1.5">
+            <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 font-bold">س</div>
+            <span>نویسنده: <strong class="text-white font-medium">{{ post.author }}</strong></span>
+          </div>
+          <span>•</span>
+          <span>منتشر شده در تاریخ : {{ post.publish|jformat:'%Y/%m/%d' }}</span>
+          <span>•</span>
+          <span class="text-lime-400">{{ post.study }} دقیقه زمان مطالعه</span>
+        </div>
+
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white mb-6 leading-tight">{{ post.title }}</h1>
+
+        <div class="text-slate-300 text-sm md:text-base leading-relaxed space-y-6 mb-12">
+          <p>{{ post.description }}</p>
+          {% if post.images.all.count > 1 %}
+            <div class="mt-10 pt-6 border-t border-slate-800/40">
+              <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-lime-500">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                </svg>تصاویر و مستندات تکمیلی این مقاله
+              </h3>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {% for img in post.images.all|slice:'1:' %}
+                  <div class="group relative rounded-xl overflow-hidden border border-slate-800 h-28 md:h-36 bg-slate-950">
+                    <img src="{{ img.image_file.url }}" alt="{{ img }}" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition duration-300 cursor-zoom-in" />
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </article>
+
+      <section class="mt-16 pt-10 border-t border-slate-800">
+        <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <span class="w-1.5 h-5 bg-lime-500 rounded-full"></span>
+          نظرات کاربران (۲ دیدگاه)
+        </h2>
+
+        <div class="space-y-4 mb-10">
+          <div class="bg-darkcard border border-slate-800/80 p-5 rounded-xl">
+            <div class="flex items-center justify-between mb-3 text-xs">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-lime-500/10 text-lime-400 flex items-center justify-center font-bold">م</div>
+                <span class="text-white font-bold">مهندس مهران فرهمند</span>
+              </div>
+              <span class="text-slate-500">۲ ساعت قبل</span>
+            </div>
+            <p class="text-slate-300 text-xs md:text-sm leading-relaxed pr-9">فوق‌العاده بود. برای من بخش بررسی حدهای جهتی و مثال نقض‌هایی که با سهمی حل می‌شدند خیلی کاربردی بود. تشکر از آقای جلالی عزیز.</p>
+          </div>
+
+          <div class="bg-darkcard/40 border border-slate-800/60 rounded-xl p-6 shadow-xl relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-32 h-[1px] bg-gradient-to-l from-lime-500 to-transparent"></div>
+
+            <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">دیدگاه یا سوال خود را بنویسید</h3>
+            <form method="post" class="space-y-4">
+              {% csrf_token %}
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1.5 font-medium">نام و نام‌خانوادگی *</label>
+                  <input type="text" name="author" required placeholder="مثال: علی علوی" value="{{ form.author.value|default:'' }}" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+                  {% if form.author.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.author.errors.0 }}</p>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1.5 font-medium">متن دیدگاه شما *</label>
+                <textarea name="text" rows="5" required placeholder="پیام خود را اینجا بنویسید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg p-3 text-xs text-white outline-none neon-border-focus transition duration-200 resize-none">{{ form.text.value|default:'' }}</textarea>
+                {% if form.text.errors %}
+                  <p class="text-red-500 text-xs mt-1">{{ form.text.errors.0 }}</p>
+                {% endif %}
+              </div>
+
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+                <button type="submit" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-5 py-2.5 rounded-lg text-xs transition duration-200 active:scale-95 shadow-md shadow-lime-500/20 flex items-center justify-center gap-2">
+                  <span>ارسال دیدگاه</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  {% endif %}
+{% endblock %}
