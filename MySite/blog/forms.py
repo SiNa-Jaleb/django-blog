@@ -55,6 +55,11 @@ class RegisterForm(forms.ModelForm):
 
         return username
 
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("این ایمیل قبلا استفاده شده است")
+        return email
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get("first_name")
