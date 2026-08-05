@@ -139,4 +139,11 @@ LOGOUT_REDIRECT_URL = "/blog"
 LOGOUT_URL = "/blog/logout/"
 
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'blog.authentication.EmailAuthentication'
+]
+
+
+
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
