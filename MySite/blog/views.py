@@ -107,7 +107,6 @@ def register(request):
         user = form.save(commit=False)
         user.set_password(form.cleaned_data["password"])
         user.save()
-        Account.objects.create(user=user)
         messages.success(
             request, "ثبت نام شما با موفقیت انجام شد. اکنون می‌توانید وارد شوید."
         )
@@ -132,19 +131,16 @@ def profile(request):
 @login_required
 @require_POST
 def edit_account(request):
-    user_form = UserEditForm(request.POST, instance=request.user)
-    account_form = AccountEditForm(
-        request.POST, request.FILES, instance=request.user.account
-    )
-    if user_form.is_valid() and account_form.is_valid():
+    user_form = UserEditForm(request.POST, request.FILES,instance=request.user)
+
+    if user_form.is_valid():
         user_form.save()
-        account_form.save()
         messages.success(request, "تغییرات با موفقیت انجام شد")
         return redirect("blog:profile")
     else:
         messages.error(request, "لطفا خطا های  زیر را برطرف کنید")
 
-    context = {"user_form": user_form, "account_form": account_form}
+    context = {"user_form": user_form}
     return render(request, "blog/profile.html", context)
 
 

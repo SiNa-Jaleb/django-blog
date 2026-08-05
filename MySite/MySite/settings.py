@@ -65,7 +65,7 @@ ROOT_URLCONF = 'MySite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,6 +129,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+AUTH_USER_MODEL = 'blog.User'
 
 LOGIN_REDIRECT_URL = "/blog/profile/"
 LOGIN_URL = "/blog/login/"

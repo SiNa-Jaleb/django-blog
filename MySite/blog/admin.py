@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import *
 from django_jalali.admin.filters import JDateFieldListFilter
+from django.contrib.auth.admin import UserAdmin
+
 
 
 # inlines
@@ -19,6 +21,13 @@ class TicketImageInline(admin.StackedInline):
     extra = 0
 
 # Register your models here.
+
+@admin.register(User)
+class UserAdmin(UserAdmin):
+    list_display = ["username", "email", "is_staff"]
+    fieldsets = UserAdmin.fieldsets + (
+    ("Additional Info", {"fields": ("job", "bio", "photo")}),
+    )
 
 
 @admin.register(Post)
@@ -47,11 +56,6 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ["active", "author", "post"]
     search_fields = ["author", "text"]
 
-@admin.register(Account)
-class AccountAdmin(admin.ModelAdmin):
-    list_display = ["user", "job", "photo"]
-    search_fields = ["user"]
-    raw_id_fields = ["user"]
 
 
 @admin.register(Ticket)

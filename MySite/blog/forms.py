@@ -92,7 +92,7 @@ class RegisterForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email"]
+        fields = ["first_name", "last_name", "email", "bio", "photo", "job"]
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get("first_name")
@@ -119,18 +119,11 @@ class UserEditForm(forms.ModelForm):
         elif len(last_name) < 3:
             raise forms.ValidationError("نام خانوادگی نباید کمتر از 3 حرف باشد!")
         return last_name
-    
-    
-
-class AccountEditForm(forms.ModelForm):
-    class Meta:
-        model = Account
-        fields = ["bio", "photo", "job"]
 
 
     def clean_bio(self):
         bio = self.cleaned_data.get("bio")
-        
+
         if not bio:
             raise forms.ValidationError("این فیلد نباید خالی بماند")
 
@@ -139,18 +132,21 @@ class AccountEditForm(forms.ModelForm):
         elif len(bio) < 10:
             raise forms.ValidationError(" بایو نباید کمتر از 10 حرف باشد!")
         return bio
-        
+
+
     def clean_job(self):
         job = self.cleaned_data.get("job")
-        
+
         if not job:
             raise forms.ValidationError("این فیلد نباید خالی بماند")
-        
+
         if job.isnumeric():
             raise forms.ValidationError("شغل نباید فقط عدد باشد")
         elif len(job) < 3:
             raise forms.ValidationError(" شغل نباید کمتر از 3 حرف باشد!")
         return job
+
+
 
 
 class PostForm(forms.ModelForm):

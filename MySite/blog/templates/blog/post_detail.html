@@ -169,7 +169,7 @@
                     <div class="flex-shrink-0">
                         <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-lime-400 font-extrabold text-lg shadow-inner shadow-black overflow-hidden">
                             <!-- در آینده اینجا تگ img قرار می‌گیرد، فعلاً به عنوان پیش‌فرض حرف اول نام نویسنده است -->
-                            <a href="{% url 'blog:public_profile' post.author.id %}"><img src="{{ user.account.photo.url }}" alt="{{ user.username }}"></a>
+                            <a href="{% url 'blog:public_profile' post.author.id %}"><img src="{{ user.photo.url }}" alt="{{ user.username }}"></a>
                         </div>
                     </div>
 
@@ -185,7 +185,7 @@
                         <!-- متن بیوگرافی نمونه -->
                         <a href="{% url 'blog:public_profile' post.author.id %}">
                             <p class="text-xs text-slate-400 leading-relaxed max-w-2xl">
-                            {{ user.account.bio }}
+                            {{ user.bio }}
                             </p>
                         </a>
                     </div>

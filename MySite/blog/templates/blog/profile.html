@@ -30,8 +30,8 @@
         <div class="md:col-span-1 space-y-6">
             <div class="bg-[#0b0f19] border border-slate-800/80 rounded-2xl p-6 text-center neon-shadow-lime">
                 <div class="relative w-28 h-28 mx-auto mb-4">
-                    {% if user.account.photo %}
-                        <img src="{{ user.account.photo.url }}" alt="{{ user.account }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" alt="{{ user }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
                     {% else %}
                         <img src="{% static 'images/ava.jpeg' %}" alt="{{ user.username }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
                     {% endif %}
@@ -147,17 +147,17 @@
                             </div>
                             <div>
                                 <label class="block text-xs text-slate-400 mb-1.5 font-medium">شغل</label>
-                                <input name="job" type="text" value="{{ account_form.job.value|default:user.account.job }}" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition" />
-                                {% if account_form.job.errors %}
-                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ account_form.job.errors.0 }}</p>
+                                <input name="job" type="text" value="{{ user_form.job.value|default:user.job }}" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition" />
+                                {% if user_form.job.errors %}
+                                    <p class="text-red-500 text-[11px] mt-1 font-medium">{{ user_form.job.errors.0 }}</p>
                                 {% endif %}
                             </div>
                         </div>
                         <div>
                             <label class="block text-xs text-slate-400 mb-1.5 font-medium">بیوگرافی (درباره شما)</label>
-                            <textarea name="bio" rows="4" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition resize-none">{{ account_form.bio.value|default:user.account.bio }}</textarea>
-                            {% if account_form.bio.errors %}
-                                <p class="text-red-500 text-[11px] mt-1 font-medium">{{ account_form.bio.errors.0 }}</p>
+                            <textarea name="bio" rows="4" class="w-full bg-[#05070f] border border-slate-800 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition resize-none">{{ user_form.bio.value|default:user.bio }}</textarea>
+                            {% if user_form.bio.errors %}
+                                <p class="text-red-500 text-[11px] mt-1 font-medium">{{ user_form.bio.errors.0 }}</p>
                             {% endif %}
                         </div>
                         <div>

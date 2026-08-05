@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django_jalali.db import models as jmodels
 import os.path
+from django.contrib.auth.models import AbstractUser
+
 
 
 
@@ -22,6 +24,12 @@ class PublishCommentManger(models.Manager):
 
 
 # Create your models here.
+
+class User(AbstractUser):
+    job = models.CharField(max_length=250, verbose_name="شغل", null=True, blank=True)
+    bio = models.TextField(verbose_name="بایو", null=True, blank=True)
+    photo = models.ImageField(upload_to="avatar/", null=True, blank=True)
+
 
 class Post(models.Model):
     # Choices
@@ -127,20 +135,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author} : {self.post}"
-    
-
-class Account(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="account", verbose_name="کاربر")
-    job = models.CharField(max_length=250, verbose_name="شغل", null=True, blank=True)
-    bio = models.TextField(verbose_name="بایو", null=True, blank=True)
-    photo = models.ImageField(upload_to="avatar/", null=True, blank=True)
-
-    class Meta:
-        verbose_name="اکانت"
-        verbose_name_plural="اکانت ها"
-
-    def __str__(self):
-        return self.user.username
 
 
 class Ticket(models.Model):
