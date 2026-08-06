@@ -103,7 +103,7 @@
 
                 <div>
                     <label class="block text-xs text-slate-400 mb-1.5 font-medium">تگ های پست (بین هر تگ فقط اسپیس زده شود)</label>
-                    <input value="{% if post_form.instance %}{% for tag in post_form.instance.tags.all %}{{ tag.name }} {% endfor %}{% endif %}" name="tags" type="text" placeholder="مثال: پایتون جنگو برنامه_نویسی" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
+                    <input value="{% if post_form.instance.pk %}{% for tag in post_form.instance.tags.all %}{{ tag.name }} {% endfor %}{% endif %}" name="tags" type="text" placeholder="مثال: پایتون جنگو برنامه_نویسی" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
                     {% if post_form.tags.errors %}
                         <p class="text-red-500 text-[11px] mt-1 font-medium">{{ post_form.tags.errors.0 }}</p>
                     {% endif %}
