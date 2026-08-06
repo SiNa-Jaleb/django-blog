@@ -215,102 +215,45 @@
 
                 <!-- گرید ۳ ستونه برای پست‌های مشابه -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-
-                    <!-- کارت نمونه اول -->
-                    <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
-                        <a href="#">
+                    {% for sim_post in similar_posts %}
+                    	<article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
+                        <a href="{{ sim_post.get_absolute_url }}">
                             <div class="w-full h-36 overflow-hidden bg-slate-900 relative">
-                                <img src="https://picsum.photos/400/250?random=1" alt="پست مشابه" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
-                                <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">برنامه‌نویسی</span>
+                                <img src="{{ sim_post.images.first.image_file.url }}" alt="{{ sim_post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">{{ sim_post.category }}</span>
                             </div>
                         </a>
 
                         <div class="p-4 flex-grow flex flex-col justify-between">
                             <div>
                                 <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-2">
-                                    <span>۵ دقیقه مطالعه</span>
+                                    <span>{{ sim_post.study }} دقیقه مطالعه</span>
                                 </div>
                                 <h4 class="text-xs font-bold text-white mb-3 leading-snug group-hover:text-lime-400 transition-colors line-clamp-2">
-                                    <a href="#">آینده فریم‌ورک‌های وب و هوش مصنوعی در سال ۲۰۲۶</a>
+                                    <a href="{{ sim_post.get_absolute_url }}">{{ sim_post.title }}</a>
                                 </h4>
                             </div>
 
                             <!-- تگ‌های پست اول -->
                             <div class="flex flex-wrap gap-1 mt-2">
-                                <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#پایتون</a>
-                                <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#جنگو</a>
+                                {% for tag in sim_post.tags.all %}
+                                	<a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                                        #{{ tag.name }}
+                                    </a>
+                                {% endfor %}
+
                             </div>
                         </div>
 
                         <div class="px-4 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[10px] text-slate-400">
-                            <span>نویسنده: سینا</span>
-                            <span>۱۴۰۵/۰۵/۱۰</span>
+                            <span>نویسنده: {{ sim_post.author }}</span>
+                            <span>{{ sim_post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
                         </div>
                     </article>
+                    {% empty %}
+                    	<p>پست مشابهی وجود ندارد</p>
+                    {% endfor %}
 
-                    <!-- کارت نمونه دوم -->
-                    <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
-                        <a href="#">
-                            <div class="w-full h-36 overflow-hidden bg-slate-900 relative">
-                                <img src="https://picsum.photos/400/250?random=2" alt="پست مشابه" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
-                                <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">تکنولوژی</span>
-                            </div>
-                        </a>
-
-                        <div class="p-4 flex-grow flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-2">
-                                    <span>۸ دقیقه مطالعه</span>
-                                </div>
-                                <h4 class="text-xs font-bold text-white mb-3 leading-snug group-hover:text-lime-400 transition-colors line-clamp-2">
-                                    <a href="#">چگونه معماری دیتابیس خود را مقیاس‌پذیر کنیم؟</a>
-                                </h4>
-                            </div>
-
-                            <!-- تگ‌های پست دوم -->
-                            <div class="flex flex-wrap gap-1 mt-2">
-                                <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#دیتابیس</a>
-                                <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#SQL</a>
-                            </div>
-                        </div>
-
-                        <div class="px-4 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[10px] text-slate-400">
-                            <span>نویسنده: رضا</span>
-                            <span>۱۴۰۵/۰۵/۰۸</span>
-                        </div>
-                    </article>
-
-                    <!-- کارت نمونه سوم -->
-                    <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
-                        <a href="#">
-                            <div class="w-full h-36 overflow-hidden bg-slate-900 relative">
-                                <img src="https://picsum.photos/400/250?random=3" alt="پست مشابه" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
-                                <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">امنیت</span>
-                            </div>
-                        </a>
-
-                        <div class="p-4 flex-grow flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-2">
-                                    <span>۱۲ دقیقه مطالعه</span>
-                                </div>
-                                <h4 class="text-xs font-bold text-white mb-3 leading-snug group-hover:text-lime-400 transition-colors line-clamp-2">
-                                    <a href="#">بررسی متدهای امنیت و احراز هویت جدید</a>
-                                </h4>
-                            </div>
-
-                            <!-- تگ‌های پست سوم -->
-                            <div class="flex flex-wrap gap-1 mt-2">
-                                <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#امنیت</a>
-                                <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#وب</a>
-                            </div>
-                        </div>
-
-                        <div class="px-4 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[10px] text-slate-400">
-                            <span>نویسنده: سارا</span>
-                            <span>۱۴۰۵/۰۵/۰۱</span>
-                        </div>
-                    </article>
 
                 </div>
             </section>

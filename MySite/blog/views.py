@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from .models import *
@@ -46,7 +47,10 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
     form = CommentForm()
     comments = post.comments.filter(active=True)
-    context = {"post": post, "form": form, "comments": comments}
+    post_tags_id = post.tags.values_list("id", flat=True)
+    similar_posts =  Post.objects.filter(tags__id__in=post_tags_id).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("same_tags")[:3]
+    context = {"post": post, "form": form, "comments": comments, "similar_posts":similar_posts}
     return render(request, "blog/post_detail.html", context)
 
 
