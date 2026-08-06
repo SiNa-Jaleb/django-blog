@@ -60,6 +60,8 @@ class Post(models.Model):
     study = models.PositiveIntegerField(verbose_name="زمان مطالعه")
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default="سایر", verbose_name="دسته بندی")
     tags = TaggableManager()
+    likes = models.ManyToManyField(User, related_name="liked_post")
+    total_likes = models.PositiveIntegerField(default=0)
 
 
     objects = jmodels.jManager()
