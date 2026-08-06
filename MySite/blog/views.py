@@ -174,6 +174,7 @@ def create_post(request):
             post = post_form.save(commit=False)
             post.author = request.user
             post.save()
+            post_form.save_m2m()
             for image in images:
                 if image:
                     Image.objects.create(post=post, image_file=image)
