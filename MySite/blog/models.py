@@ -8,6 +8,7 @@ from django.utils import timezone
 from django_jalali.db import models as jmodels
 import os.path
 from django.contrib.auth.models import AbstractUser
+from taggit.managers import TaggableManager
 
 
 
@@ -58,6 +59,8 @@ class Post(models.Model):
     )
     study = models.PositiveIntegerField(verbose_name="زمان مطالعه")
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default="سایر", verbose_name="دسته بندی")
+    tags = TaggableManager()
+
 
     objects = jmodels.jManager()
     published = PublishManger()

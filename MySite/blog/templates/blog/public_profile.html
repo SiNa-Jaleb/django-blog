@@ -89,11 +89,10 @@
                         تمام مقالات این نویسنده
                     </h2>
                 </div>
-
                 <!-- گرید کارت‌های مقالات -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {% for post in posts %}
-                        <!-- نمونه کارت مقاله ۱ -->
+                        <!-- نمونه کارت مقاله -->
                         <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
                             <a href="{{ post.get_absolute_url }}">
                                 <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
@@ -102,13 +101,26 @@
                                 </div>
                             </a>
 
-                            <div class="p-6 flex-grow">
-                                <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
-                                    <span>{{ post.study }} دقیقه مطالعه</span>
+                            <!-- بدنه اصلی محتوای کارت -->
+                            <div class="p-6 flex-grow flex flex-col justify-between">
+                                <!-- بخش تیتر و توضیحات -->
+                                <div>
+                                    <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+                                        <span>{{ post.study }} دقیقه مطالعه</span>
+                                    </div>
+                                    <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                                    <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
                                 </div>
-                                <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
-                                <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
+
+                                <!-- بخش فرانت خام تگ‌ها (چسبیده به پایین) -->
+                                <div class="flex flex-wrap gap-1.5 mt-4">
+                                    <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#پایتون</a>
+                                    <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#جنگو</a>
+                                    <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#وب</a>
+                                </div>
                             </div>
+
+                            <!-- فوتر کارت -->
                             <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
                                 <span>نویسنده: {{ post.author }}</span>
                                 <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
@@ -118,10 +130,10 @@
                     {% empty %}
                         <h2 class="text-sm font-bold text-white flex items-center gap-2"> پستی برای نمایش وجود ندارد</h2>
                     {% endfor %}
-
                 </div>
-                {% include "partials/pagination.html" with page=posts %}
+            {% include "partials/pagination.html" with page=posts %}
             </div>
+        </div>
         </div>
     </main>
 

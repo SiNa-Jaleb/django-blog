@@ -37,7 +37,7 @@
       background: #84cc16;
       border-radius: 4px;
     }
-    
+
     .neon-glow:hover {
       box-shadow: 0 0 15px rgba(132, 204, 22, 0.3);
     }
@@ -131,6 +131,7 @@
               </article>
             {% endfor %}
           {% else %}
+
             {% for post in posts %}
               <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
                 <a href="{{ post.get_absolute_url }}">
@@ -146,6 +147,18 @@
                   </div>
                   <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
                   <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
+                    <!-- برچسب‌های هر مقاله -->
+                    <div class="flex flex-wrap gap-1.5 mt-3">
+                        <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                            test1
+                        </a>
+                        <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                            test2
+                        </a>
+                        <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                            test3
+                        </a>
+                    </div>
                 </div>
                 <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
                   <span>نویسنده: {{ post.author }}</span>
