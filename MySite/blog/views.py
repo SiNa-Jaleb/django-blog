@@ -271,7 +271,7 @@ def like_post(request):
     post = get_object_or_404(Post, id=post_id)
     user = request.user
 
-    if post.likes.filter(user=user).exists():
+    if post.likes.filter(id=user.id).exists():
         post.likes.remove(user)
         liked = False
     else:

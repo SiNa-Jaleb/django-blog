@@ -130,7 +130,21 @@
                 <span>منتشر شده در تاریخ : {{ post.publish|jformat:'%Y/%m/%d' }}</span>
                 <span>•</span>
                 <span class="text-lime-400">{{ post.study }} دقیقه زمان مطالعه</span>
+                <!-- دکمه لایک و تعداد لایک‌ها -->
+                <div id="like_dev" class="flex items-center gap-2">
+                    <button id="like_btn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition duration-200 text-xs font-medium {% if user in post.likes.all %}bg-lime-500/20 text-lime-400 border-lime-500/40{% else %}bg-slate-800/60 text-slate-400 border-slate-700/60 hover:text-white hover:border-slate-600{% endif %}">
+                        <!-- آیکون قلب (در صورت لایک بودن پر می‌شود) -->
+                        <svg id="like_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{% if request.user in post.likes.all %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-lime-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                        </svg>
+                        <span id="like_text">{% if request.user in post.likes.all %}لایک شده{% else %}لایک{% endif %}</span>
+                    </button>
+                    <span id="total_like" class="text-xs text-slate-400 font-mono bg-slate-900 border border-slate-800 px-2 py-1 rounded-md">
+                    {{ post.likes.count }}
+                 </span>
+                </div>
             </div>
+
 
             <h1 class="text-2xl md:text-4xl font-extrabold text-white mb-6 leading-tight">{{ post.title }}</h1>
 
@@ -158,11 +172,11 @@
             <div class="mt-6 pt-4 border-t border-slate-800/60 flex flex-wrap items-center gap-2">
                 <span class="text-xs text-slate-400 font-medium">برچسب‌ها:</span>
                 {% for tag in post.tags.all %}
-                	<a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-xs bg-lime-500/10 text-lime-400 hover:bg-lime-500/20 border border-lime-500/20 px-3 py-1 rounded-lg transition duration-200">
-                    #{{ tag.name }}
-                </a>
+                    <a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-xs bg-lime-500/10 text-lime-400 hover:bg-lime-500/20 border border-lime-500/20 px-3 py-1 rounded-lg transition duration-200">
+                        #{{ tag.name }}
+                    </a>
                 {% empty %}
-                <span class="text-xs text-slate-500">بدون برچسب</span>
+                    <span class="text-xs text-slate-500">بدون برچسب</span>
                 {% endfor %}
             </div>
         </article>
@@ -216,42 +230,42 @@
                 <!-- گرید ۳ ستونه برای پست‌های مشابه -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                     {% for sim_post in similar_posts %}
-                    	<article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
-                        <a href="{{ sim_post.get_absolute_url }}">
-                            <div class="w-full h-36 overflow-hidden bg-slate-900 relative">
-                                <img src="{{ sim_post.images.first.image_file.url }}" alt="{{ sim_post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
-                                <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">{{ sim_post.category }}</span>
-                            </div>
-                        </a>
-
-                        <div class="p-4 flex-grow flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-2">
-                                    <span>{{ sim_post.study }} دقیقه مطالعه</span>
+                        <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
+                            <a href="{{ sim_post.get_absolute_url }}">
+                                <div class="w-full h-36 overflow-hidden bg-slate-900 relative">
+                                    <img src="{{ sim_post.images.first.image_file.url }}" alt="{{ sim_post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                    <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">{{ sim_post.category }}</span>
                                 </div>
-                                <h4 class="text-xs font-bold text-white mb-3 leading-snug group-hover:text-lime-400 transition-colors line-clamp-2">
-                                    <a href="{{ sim_post.get_absolute_url }}">{{ sim_post.title }}</a>
-                                </h4>
+                            </a>
+
+                            <div class="p-4 flex-grow flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center gap-2 text-[11px] text-slate-400 mb-2">
+                                        <span>{{ sim_post.study }} دقیقه مطالعه</span>
+                                    </div>
+                                    <h4 class="text-xs font-bold text-white mb-3 leading-snug group-hover:text-lime-400 transition-colors line-clamp-2">
+                                        <a href="{{ sim_post.get_absolute_url }}">{{ sim_post.title }}</a>
+                                    </h4>
+                                </div>
+
+                                <!-- تگ‌های پست اول -->
+                                <div class="flex flex-wrap gap-1 mt-2">
+                                    {% for tag in sim_post.tags.all %}
+                                        <a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                                            #{{ tag.name }}
+                                        </a>
+                                    {% endfor %}
+
+                                </div>
                             </div>
 
-                            <!-- تگ‌های پست اول -->
-                            <div class="flex flex-wrap gap-1 mt-2">
-                                {% for tag in sim_post.tags.all %}
-                                	<a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
-                                        #{{ tag.name }}
-                                    </a>
-                                {% endfor %}
-
+                            <div class="px-4 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[10px] text-slate-400">
+                                <span>نویسنده: {{ sim_post.author }}</span>
+                                <span>{{ sim_post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
                             </div>
-                        </div>
-
-                        <div class="px-4 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[10px] text-slate-400">
-                            <span>نویسنده: {{ sim_post.author }}</span>
-                            <span>{{ sim_post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
-                        </div>
-                    </article>
+                        </article>
                     {% empty %}
-                    	<p>پست مشابهی وجود ندارد</p>
+                        <p>پست مشابهی وجود ندارد</p>
                     {% endfor %}
 
 
@@ -312,4 +326,35 @@
                 </div>
             </section>
     </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+    $(document).ready(function () {
+
+        $("#like_btn").click(function () {
+            let like_button = $(this);
+            let icon = like_button.find("#like_icon");
+            let text_span = like_button.find("#like_text");
+
+            $.ajax({
+                type: "POST",
+                url:"{% url "blog:like_post" %}",
+                data: {"post_id":"{{ post.id }}", "csrfmiddlewaretoken": "{{ csrf_token }}"},
+                success: function (data) {
+                    if (data.liked) {
+                        text_span.text("لایک شده");
+                        icon.attr("fill", "currentColor");
+                        like_button.addClass("bg-lime-500/20 text-lime-400 border-lime-500/40").removeClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
+                    }else {
+                        text_span.text("لایک");
+                        icon.attr("fill", "none");
+                        like_button.removeClass("bg-lime-500/20 text-lime-400 border-lime-500/40").addClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
+                    }
+                    $("#total_like").text(data.total_likes);
+                },
+            });
+        });
+
+    });
+    </script>
 {% endblock %}
