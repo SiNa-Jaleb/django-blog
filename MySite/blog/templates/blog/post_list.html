@@ -149,15 +149,11 @@
                   <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
                     <!-- برچسب‌های هر مقاله -->
                     <div class="flex flex-wrap gap-1.5 mt-3">
-                        <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
-                            test1
-                        </a>
-                        <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
-                            test2
-                        </a>
-                        <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
-                            test3
-                        </a>
+                        {% for tag in post.tags.all %}
+                            <a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                            #{{ tag.name }}
+                            </a>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">

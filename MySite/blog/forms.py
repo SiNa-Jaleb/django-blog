@@ -93,7 +93,8 @@ class RegisterForm(forms.ModelForm):
         if password and password2 and password != password2:
             raise forms.ValidationError("رمز عبور و تکرار آن مطابقت ندارند")
         return password2
-    
+
+
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
@@ -157,7 +158,7 @@ class UserEditForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "description", "study", "category"]
+        fields = ["title", "description", "study", "category", "tags"]
 
 
 class TicketForm(forms.ModelForm):

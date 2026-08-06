@@ -8,6 +8,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("post-list/", views.post_list, name="post_list"),
     path("post-list/<str:category>/", views.post_list, name="post_list_category"),
+    path("post-list/tag/<tag_slug>", views.post_list, name="post_list_tag"),
     path("post-list/detail/<int:post_id>/", views.post_detail, name="post_detail"),
     path("post-list/detail/<int:post_id>/comment/", views.post_comment, name="post_comment"),
     path("search/",views.search, name="search"),

@@ -112,11 +112,15 @@
                                     <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
                                 </div>
 
-                                <!-- بخش فرانت خام تگ‌ها (چسبیده به پایین) -->
+                                <!-- بخش  تگ‌ها (چسبیده به پایین) -->
                                 <div class="flex flex-wrap gap-1.5 mt-4">
-                                    <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#پایتون</a>
-                                    <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#جنگو</a>
-                                    <a href="#" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">#وب</a>
+                                    {% for tag in post.tags.all %}
+                                    	<a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                                            #{{ tag.name }}
+                                        </a>
+                                    {% endfor %}
+
+
                                 </div>
                             </div>
 

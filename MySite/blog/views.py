@@ -19,9 +19,11 @@ def index(request):
     return render(request, "blog/index.html", {"random_post": random_post})
 
 
-def post_list(request, category=None):
+def post_list(request, category=None, tag_slug=None):
     if category is not None:
         posts = Post.published.filter(category=category)
+    elif tag_slug is not None:
+        posts = Post.objects.filter(tags__slug=tag_slug)
     else:
         posts = Post.published.all()
 
@@ -72,6 +74,7 @@ def search(request):
             search_query = SearchQuery(query)
             search_vector = (
                 SearchVector("title", weight="A")
+                + SearchVector("tags__name", weight="A")
                 + SearchVector("description", weight="B")
                 + SearchVector("images__title", weight="B")
                 + SearchVector("category", weight="C")
@@ -189,7 +192,6 @@ def create_post(request):
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     images = Image.objects.filter(post=post)
-    print(images)
     if request.method == "POST":
         post_form = PostForm(request.POST, instance=post)
         if post_form.is_valid():
