@@ -35,5 +35,6 @@ urlpatterns = [
 
     path("profile/ticket/", views.ticket, name="ticket"),
     path("public-profile/<int:pk>/", views.public_profile, name="public_profile"),
+    path('like-post/', views.like_post, name="like_post"),
 
 ]

@@ -10,6 +10,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import random
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -261,3 +262,21 @@ def public_profile(request, pk):
         posts = paginator.page(paginator.num_pages)
 
     return render(request, "blog/public_profile.html", {"user": user, "posts": posts})
+
+
+@login_required()
+@require_POST
+def like_post(request):
+    post_id = request.POST.get("post_id")
+    post = get_object_or_404(Post, id=post_id)
+    user = request.user
+
+    if post.likes.filter(user=user).exists():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+    total_likes = post.likes.count()
+    response_data = {"liked": liked, "total_likes": total_likes}
+    return JsonResponse(response_data)
