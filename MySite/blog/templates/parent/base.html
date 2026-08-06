@@ -1,24 +1,26 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% comment %} <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.2/dist/font-face.css" rel="stylesheet" type="text/css" /> {% endcomment %}
     <title>
-      TECHBLOG |{% block title %}
+        TECHBLOG |{% block title %}
 
-      {% endblock %}
+    {% endblock %}
     </title>
     {% block head %}
 
     {% endblock %}
-  </head>
-  <body class="text-slate-200 min-h-screen flex flex-col justify-between">
-    {% include 'partials/header.html' %}
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col justify-between">
+{% include 'partials/header.html' %}
+<div class="flex-grow flex flex-col">
     {% block body %}
 
     {% endblock %}
-    {% include 'partials/footer.html' %}
-  </body>
+</div>
+{% include 'partials/footer.html' %}
+</body>
 </html>
