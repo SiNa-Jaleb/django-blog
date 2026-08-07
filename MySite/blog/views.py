@@ -62,18 +62,17 @@ def post_comment(request):
     post_id = request.POST.get("post_id")
     post = get_object_or_404(Post, id=post_id)
     form = CommentForm(request.POST)
+    user = request.user
     if form.is_valid():
         comment = form.save(commit=False)
         comment.post = post
-        comment.author = request.user
+        comment.author = user
         comment.save()
 
-        html = render_to_string("form/comment_validation.html", {"comment": comment}, request=request)
-        comment_count = post.comments.count()
-        return JsonResponse({"html":html, "comment_count":comment_count})
+        return JsonResponse({"status": "success",
+            "message": "دیدگاه شما با موفقیت ثبت شد و پس از تایید مدیر نمایش داده خواهد شد."})
 
-
-    return JsonResponse({"error":form.errors.get_json_data()})
+    return JsonResponse({"errors":form.errors.get_json_data()}, status=400)
 
 
 def search(request):

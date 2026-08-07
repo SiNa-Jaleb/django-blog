@@ -124,7 +124,7 @@ class Image(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name="comments", verbose_name="پست")
-    author = models.CharField(max_length=250, verbose_name="نویسنده کامنت")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments", verbose_name="نویسنده")
     text = models.TextField(verbose_name="متن کامنت")
     create = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     active = models.BooleanField(db_default=False, verbose_name="فعال")
