@@ -261,6 +261,13 @@
 
                             <div class="px-4 py-3 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[10px] text-slate-400">
                                 <span>نویسنده: {{ sim_post.author }}</span>
+                                <!-- نمایش تعداد لایک‌ها -->
+                                <div class="flex items-center gap-1 text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-lime-400">
+                                        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                                    </svg>
+                                    <span>{{ post.total_likes }}</span>
+                                </div>
                                 <span>{{ sim_post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
                             </div>
                         </article>
@@ -329,32 +336,32 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#like_btn").click(function () {
-            let like_button = $(this);
-            let icon = like_button.find("#like_icon");
-            let text_span = like_button.find("#like_text");
+            $("#like_btn").click(function () {
+                let like_button = $(this);
+                let icon = like_button.find("#like_icon");
+                let text_span = like_button.find("#like_text");
 
-            $.ajax({
-                type: "POST",
-                url:"{% url "blog:like_post" %}",
-                data: {"post_id":"{{ post.id }}", "csrfmiddlewaretoken": "{{ csrf_token }}"},
-                success: function (data) {
-                    if (data.liked) {
-                        text_span.text("لایک شده");
-                        icon.attr("fill", "currentColor");
-                        like_button.addClass("bg-lime-500/20 text-lime-400 border-lime-500/40").removeClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
-                    }else {
-                        text_span.text("لایک");
-                        icon.attr("fill", "none");
-                        like_button.removeClass("bg-lime-500/20 text-lime-400 border-lime-500/40").addClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
-                    }
-                    $("#total_like").text(data.total_likes);
-                },
+                $.ajax({
+                    type: "POST",
+                    url:"{% url "blog:like_post" %}",
+                    data: {"post_id":"{{ post.id }}", "csrfmiddlewaretoken": "{{ csrf_token }}"},
+                    success: function (data) {
+                        if (data.liked) {
+                            text_span.text("لایک شده");
+                            icon.attr("fill", "currentColor");
+                            like_button.addClass("bg-lime-500/20 text-lime-400 border-lime-500/40").removeClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
+                        }else {
+                            text_span.text("لایک");
+                            icon.attr("fill", "none");
+                            like_button.removeClass("bg-lime-500/20 text-lime-400 border-lime-500/40").addClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
+                        }
+                        $("#total_like").text(data.total_likes);
+                    },
+                });
             });
-        });
 
-    });
+        });
     </script>
 {% endblock %}

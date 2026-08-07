@@ -2,170 +2,192 @@
 {% load blog_tags %}
 {% load jformat %}
 {% block title %}
-  لیست پست ها
+    لیست پست ها
 {% endblock %}
 
 {% block head %}
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            darkbg: '#0b0f19',
-            darkcard: '#151f32'
-          }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0b0f19',
+                        darkcard: '#151f32'
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
-  <!-- لود فونت شبنم -->
-  {% comment %} <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.2/dist/font-face.css" rel="stylesheet" type="text/css" /> {% endcomment %}
-  <style>
-    body {
-      font-family: 'Shabnam', sans-serif;
-      background-color: #0b0f19;
-    }
-    /* استایل سفارشی اسکرول‌بار */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0b0f19;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #84cc16;
-      border-radius: 4px;
-    }
+    </script>
+    <!-- لود فونت شبنم -->
+    {% comment %} <link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.2/dist/font-face.css" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <style>
+        body {
+            font-family: 'Shabnam', sans-serif;
+            background-color: #0b0f19;
+        }
+        /* استایل سفارشی اسکرول‌بار */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #84cc16;
+            border-radius: 4px;
+        }
 
-    .neon-glow:hover {
-      box-shadow: 0 0 15px rgba(132, 204, 22, 0.3);
-    }
-    .neon-border-focus:focus {
-      border-color: #84cc16;
-      box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
-    }
-  </style>
+        .neon-glow:hover {
+            box-shadow: 0 0 15px rgba(132, 204, 22, 0.3);
+        }
+        .neon-border-focus:focus {
+            border-color: #84cc16;
+            box-shadow: 0 0 10px rgba(132, 204, 22, 0.2);
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-  <!-- محتوای اصلی آرشیو -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
-    <div class="flex flex-col lg:flex-row gap-8">
-      <!-- ستون سمت راست: فیلترها و دسته‌بندی‌ها (Sidebar) -->
-      <aside class="w-full lg:w-64 flex-shrink-0 space-y-6">
-        <!-- باکس دسته‌بندی‌ها -->
-        <div class="bg-[#151f32] p-5 rounded-xl border border-slate-800/60">
-          <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
-            <span class="w-1.5 h-4 bg-lime-500 rounded-full"></span>
-            دسته‌بندی موضوعی
-          </h3>
-          <ul class="space-y-2 text-xs">
-            <li>
-              <a href="{% url 'blog:post_list_category' 'برنامه نویسی' %}" class="flex items-center justify-between p-2 rounded-lg bg-[#0b0f19]/40 text-lime-400 font-medium hover:bg-slate-800 transition">
-                <span>برنامه نویسی</span>
-                {% comment %} <span class="bg-lime-500/10 text-lime-400 px-2 py-0.5 rounded-md text-[10px]">۱۸</span> {% endcomment %}
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'blog:post_list_category' 'تکنولوژی' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                <span>تکنولوژی</span>
-                {% comment %} <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md text-[10px]">۱۲</span> {% endcomment %}
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'blog:post_list_category' 'هوش مصنوعی' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                <span>هوش مصنوعی</span>
-                {% comment %} <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md text-[10px]">۷</span> {% endcomment %}
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'blog:post_list_category' 'بازی' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                <span>بازی</span>
-                {% comment %} <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md text-[10px]">۵</span> {% endcomment %}
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'blog:post_list_category' 'سایر' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                <span>سایر</span>
-                {% comment %} <span class="bg-lime-500/10 text-lime-400 px-2 py-0.5 rounded-md text-[10px]">۱۸</span> {% endcomment %}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </aside>
-
-      <!-- ستون سمت چپ: لیست گرید پست‌ها و صفحه‌بندی -->
-      <section class="flex-grow">
-        <div class="flex items-center justify-between mb-6">
-          <h1 class="text-lg font-bold text-white flex items-center gap-2">
-            <span class="w-2 h-6 bg-lime-500 rounded-full"></span>
-            آرشیو تمام مقالات
-          </h1>
-        </div>
-
-        <!-- گرید پست‌ها (۲ ستونه در دسکتاپ برای وضوح بیشتر دیسکریپشن‌ها) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {% if category %}
-            <h2>نتایج برای فیلتر {{ category }}</h2> <br />
-            {% for post in posts %}
-              <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
-                <a href="{{ post.get_absolute_url }}">
-                  <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
-                    <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
-                    <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
-                  </div>
-                </a>
-
-                <div class="p-6 flex-grow">
-                  <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
-                    <span>{{ post.study }} دقیقه مطالعه</span>
-                  </div>
-                  <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
-                  <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10 }}</p>
-                </div>
-                <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
-                  <span>نویسنده: {{ post.author }}</span>
-                  <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
-                </div>
-              </article>
-            {% endfor %}
-          {% else %}
-
-            {% for post in posts %}
-              <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
-                <a href="{{ post.get_absolute_url }}">
-                  <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
-                    <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
-                    <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
-                  </div>
-                </a>
-
-                <div class="p-6 flex-grow">
-                  <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
-                    <span>{{ post.study }} دقیقه مطالعه</span>
-                  </div>
-                  <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
-                  <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
-                    <!-- برچسب‌های هر مقاله -->
-                    <div class="flex flex-wrap gap-1.5 mt-3">
-                        {% for tag in post.tags.all %}
-                            <a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
-                            #{{ tag.name }}
+    <!-- محتوای اصلی آرشیو -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- ستون سمت راست: فیلترها و دسته‌بندی‌ها (Sidebar) -->
+            <aside class="w-full lg:w-64 flex-shrink-0 space-y-6">
+                <!-- باکس دسته‌بندی‌ها -->
+                <div class="bg-[#151f32] p-5 rounded-xl border border-slate-800/60">
+                    <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-4 bg-lime-500 rounded-full"></span>
+                        دسته‌بندی موضوعی
+                    </h3>
+                    <ul class="space-y-2 text-xs">
+                        <li>
+                            <a href="{% url 'blog:post_list_category' 'برنامه نویسی' %}" class="flex items-center justify-between p-2 rounded-lg bg-[#0b0f19]/40 text-lime-400 font-medium hover:bg-slate-800 transition">
+                                <span>برنامه نویسی</span>
+                                {% comment %} <span class="bg-lime-500/10 text-lime-400 px-2 py-0.5 rounded-md text-[10px]">۱۸</span> {% endcomment %}
                             </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'blog:post_list_category' 'تکنولوژی' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                                <span>تکنولوژی</span>
+                                {% comment %} <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md text-[10px]">۱۲</span> {% endcomment %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'blog:post_list_category' 'هوش مصنوعی' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                                <span>هوش مصنوعی</span>
+                                {% comment %} <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md text-[10px]">۷</span> {% endcomment %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'blog:post_list_category' 'بازی' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                                <span>بازی</span>
+                                {% comment %} <span class="bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md text-[10px]">۵</span> {% endcomment %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'blog:post_list_category' 'سایر' %}" class="flex items-center justify-between p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                                <span>سایر</span>
+                                {% comment %} <span class="bg-lime-500/10 text-lime-400 px-2 py-0.5 rounded-md text-[10px]">۱۸</span> {% endcomment %}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- ستون سمت چپ: لیست گرید پست‌ها و صفحه‌بندی -->
+            <section class="flex-grow">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span class="w-2 h-6 bg-lime-500 rounded-full"></span>
+                        آرشیو تمام مقالات
+                    </h1>
+                </div>
+
+                <!-- گرید پست‌ها (۲ ستونه در دسکتاپ برای وضوح بیشتر دیسکریپشن‌ها) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    {% if category %}
+                        <h2>نتایج برای فیلتر {{ category }}</h2> <br />
+                        {% for post in posts %}
+                            <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
+                                <a href="{{ post.get_absolute_url }}">
+                                    <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
+                                        <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                        <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
+                                    </div>
+                                </a>
+
+                                <div class="p-6 flex-grow">
+                                    <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+                                        <span>{{ post.study }} دقیقه مطالعه</span>
+                                    </div>
+                                    <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                                    <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10 }}</p>
+                                    <!-- برچسب‌های هر مقاله -->
+                                    <div class="flex flex-wrap gap-1.5 mt-3">
+                                        {% for tag in post.tags.all %}
+                                            <a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                                                #{{ tag.name }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
+                                    <span>نویسنده: {{ post.author }}</span>
+                                    <!-- نمایش تعداد لایک‌ها -->
+                                    <div class="flex items-center gap-1 text-slate-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-lime-400">
+                                            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                                        </svg>
+                                        <span>{{ post.total_likes }}</span>
+                                    </div>
+                                    <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                                </div>
+                            </article>
                         {% endfor %}
-                    </div>
+                    {% else %}
+
+                        {% for post in posts %}
+                            <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
+                                <a href="{{ post.get_absolute_url }}">
+                                    <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
+                                        <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                        <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
+                                    </div>
+                                </a>
+
+                                <div class="p-6 flex-grow">
+                                    <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+                                        <span>{{ post.study }} دقیقه مطالعه</span>
+                                    </div>
+                                    <h2 class="text-base font-bold text-white mb-2 group-hover:text-lime-400 transition-colors"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                                    <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">{{ post.description|truncatewords:10|remove_markdown_sing }}</p>
+                                    <!-- برچسب‌های هر مقاله -->
+                                    <div class="flex flex-wrap gap-1.5 mt-3">
+                                        {% for tag in post.tags.all %}
+                                            <a href="{% url 'blog:post_list_tag' tag_slug=tag.slug %}" class="text-[10px] text-lime-400/80 bg-lime-500/10 hover:bg-lime-500/20 px-2 py-0.5 rounded transition">
+                                                #{{ tag.name }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
+                                    <span>نویسنده: {{ post.author }}</span>
+                                    <!-- نمایش تعداد لایک‌ها -->
+                                    <div class="flex items-center gap-1 text-slate-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-lime-400">
+                                            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                                        </svg>
+                                        <span>{{ post.total_likes }}</span>
+                                    </div>
+                                    <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-                <div class="px-6 py-4 bg-[#111827]/50 border-t border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
-                  <span>نویسنده: {{ post.author }}</span>
-                  <span>{{ post.publish|jformat:'%H:%M - %Y/%m/%d' }}</span>
-                </div>
-              </article>
-            {% endfor %}
-          {% endif %}
+                {% include 'partials/pagination.html' with page=posts %}
+            </section>
         </div>
-        {% include 'partials/pagination.html' with page=posts %}
-      </section>
-    </div>
-  </main>
+    </main>
 {% endblock %}
