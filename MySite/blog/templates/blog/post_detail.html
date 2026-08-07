@@ -140,7 +140,7 @@
                         <span id="like_text">{% if request.user in post.likes.all %}لایک شده{% else %}لایک{% endif %}</span>
                     </button>
                     <span id="total_like" class="text-xs text-slate-400 font-mono bg-slate-900 border border-slate-800 px-2 py-1 rounded-md">
-                    {{ post.likes.count }}
+                    {{ post.total_likes }}
                  </span>
                 </div>
             </div>
