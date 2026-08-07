@@ -284,44 +284,55 @@
             <section class="mt-16 pt-10 border-t border-slate-800">
                 <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
                     <span class="w-1.5 h-5 bg-lime-500 rounded-full"></span>
-                    نظرات کاربران ({{ comments.count }} دیدگاه)
+                    <span id="comment_count">نظرات کاربران ({{ comments.count }} دیدگاه)</span>
                 </h2>
 
                 <div class="space-y-4 mb-10">
-                    {% for comment in comments %}
-                        <div class="bg-darkcard border border-slate-800/80 p-5 rounded-xl">
-                            <div class="flex items-center justify-between mb-3 text-xs">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full bg-lime-500/10 text-lime-400 flex items-center justify-center font-bold"><img src="{% static 'images/avatar.jpg' %}" alt=""></div>
-                                    <span class="text-white font-bold">{{ comment.author }}</span>
+
+                    <div id="comments_list" class="space-y-4 mb-8">
+                        {% for comment in comments %}
+                            <div class="bg-darkcard border border-slate-800/80 p-5 rounded-xl transition hover:border-slate-700">
+                                <div class="flex items-center justify-between mb-3 text-xs">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-8 h-8 rounded-full bg-lime-500/10 border border-lime-500/20 text-lime-400 flex items-center justify-center font-bold overflow-hidden">
+                                            {% if comment.author.photo %}
+                                                <img src="{{ comment.author.photo.url }}" alt="{{ comment.author }}" class="w-full h-full object-cover">
+                                            {% else %}
+                                                <span class="text-xs">{{ comment.author.username|slice:":1" }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <span class="text-white font-bold">{{ comment.author.username }}</span>
+                                    </div>
+                                    <span class="text-slate-500 text-[11px]">{{ comment.create|jformat:'%H:%M - %Y/%m/%d' }}</span>
                                 </div>
-                                <span class="text-slate-500">{{ comment.create|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed pr-2 sm:pr-10">{{ comment.text }}</p>
                             </div>
-                            <p class="text-slate-300 text-xs md:text-sm leading-relaxed pr-9">{{ comment.text }}</p>
-                        </div>
-                    {% endfor %}
+                        {% empty %}
+                            <p class="text-xs text-slate-500 py-4 text-center">هنوز دیدگاهی برای این پست ثبت نشده است.</p>
+                        {% endfor %}
+                    </div>
 
                     <div class="bg-darkcard/40 border border-slate-800/60 rounded-xl p-6 shadow-xl relative overflow-hidden group">
                         <div class="absolute top-0 right-0 w-32 h-[1px] bg-gradient-to-l from-lime-500 to-transparent"></div>
 
                         <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">دیدگاه یا سوال خود را بنویسید</h3>
 
-                        <form action="{% url 'blog:post_comment' post.id %}" method="post" class="space-y-4">
-                            {% csrf_token %}
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-[11px] text-slate-400 mb-1.5 font-medium">نام و نام‌خانوادگی *</label>
-                                    <input type="text" name="author" required placeholder="مثال: علی علوی" class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg px-3 py-2.5 text-xs text-white outline-none neon-border-focus transition duration-200" />
-                                </div>
-                            </div>
+                        <div id="comment_success_alert" class="hidden mb-4 p-4 rounded-lg bg-lime-500/10 border border-lime-500/30 text-lime-400 text-xs leading-relaxed flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span id="comment_success_text"></span>
+                        </div>
 
+                        <form id="comment_form" class="space-y-4">
                             <div>
                                 <label class="block text-[11px] text-slate-400 mb-1.5 font-medium">متن دیدگاه شما *</label>
-                                <textarea name="text" rows="5" required placeholder="پیام خود را اینجا بنویسید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg p-3 text-xs text-white outline-none neon-border-focus transition duration-200 resize-none"></textarea>
+                                <textarea id="comment_text" name="text" rows="5" required placeholder="پیام خود را اینجا بنویسید..." class="w-full bg-[#0b0f19] border border-slate-700/60 rounded-lg p-3 text-xs text-white outline-none neon-border-focus transition duration-200 resize-none"></textarea>
+                                <p id="comment_error" class="text-red-500 text-xs mt-1"></p>
                             </div>
 
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
-                                <button type="submit" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-5 py-2.5 rounded-lg text-xs transition duration-200 active:scale-95 shadow-md shadow-lime-500/20 flex items-center justify-center gap-2">
+                                <button id="submit_button" type="submit" class="bg-lime-500 hover:bg-lime-600 text-darkbg font-bold px-5 py-2.5 rounded-lg text-xs transition duration-200 active:scale-95 shadow-md shadow-lime-500/20 flex items-center justify-center gap-2">
                                     <span>ارسال دیدگاه</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
@@ -357,11 +368,33 @@
                             icon.attr("fill", "none");
                             like_button.removeClass("bg-lime-500/20 text-lime-400 border-lime-500/40").addClass("bg-slate-800/60 text-slate-400 border-slate-700/60");
                         }
-                        $("#total_like").text(data.total_likes);
                     },
                 });
             });
 
+            $("#submit_button").click(function (e) {
+                e.preventDefault();
+
+                let form = $("#comment_form");
+                let text = form.find("#comment_text").val();
+                let success_alert = $("#comment_success_alert");
+
+                $.ajax({
+                    type: "POST",
+                    url:"{% url "blog:post_comment" %}",
+                    data: {"post_id":"{{ post.id }}", "text":text, "csrfmiddlewaretoken": "{{ csrf_token }}"},
+                    success: function (data) {
+                        $("#comment_success_text").text(data.message);
+                        success_alert.removeClass("hidden");
+                        form.find("#comment_text").val("");
+                        $("#comment_error").empty();
+                    },
+                    error: function (xhr) {
+                        let error = xhr.responseJSON.errors;
+                        $("#comment_error").text(error.text[0].message);
+                    },
+                });
+            });
         });
     </script>
 {% endblock %}
