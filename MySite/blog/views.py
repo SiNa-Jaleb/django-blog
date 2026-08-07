@@ -1,5 +1,6 @@
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from .models import *
 from .forms import *
@@ -9,8 +10,8 @@ from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-import random
 from django.http import JsonResponse
+import random
 
 # Create your views here.
 
@@ -55,18 +56,24 @@ def post_detail(request, post_id):
     return render(request, "blog/post_detail.html", context)
 
 
+@login_required()
 @require_POST
-def post_comment(request, post_id):
+def post_comment(request):
+    post_id = request.POST.get("post_id")
     post = get_object_or_404(Post, id=post_id)
     form = CommentForm(request.POST)
-    comment = None
     if form.is_valid():
         comment = form.save(commit=False)
         comment.post = post
+        comment.author = request.user
         comment.save()
 
-    context = {"comment": comment, "form": form, "post": post}
-    return render(request, "form/comment_validation.html", context)
+        html = render_to_string("form/comment_validation.html", {"comment": comment}, request=request)
+        comment_count = post.comments.count()
+        return JsonResponse({"html":html, "comment_count":comment_count})
+
+
+    return JsonResponse({"error":form.errors.get_json_data()})
 
 
 def search(request):

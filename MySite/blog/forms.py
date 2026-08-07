@@ -5,16 +5,7 @@ from .models import *
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ["author", "text"]
-
-    def clean_author(self):
-        author = self.cleaned_data["author"]
-        if author:
-            if len(author) < 3:
-                raise forms.ValidationError("نام باید حداقل 3 کاراکتر باشد")
-
-            else:
-                return author
+        fields = ["text"]
 
     def clean_text(self):
         text = self.cleaned_data["text"]
