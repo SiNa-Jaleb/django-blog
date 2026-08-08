@@ -49,9 +49,11 @@ INSTALLED_APPS = [
     'django_jalali',
     "django.contrib.postgres",
     'taggit',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,6 +147,9 @@ AUTHENTICATION_BACKENDS = [
     'blog.authentication.EmailAuthentication'
 ]
 
-
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
