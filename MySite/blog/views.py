@@ -224,6 +224,7 @@ def edit_post(request, post_id):
 
 
 @login_required()
+@require_POST
 def delete_post_photo(request):
     pk = request.POST.get("image_id")
     photo = get_object_or_404(Image, id=pk)
