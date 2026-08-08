@@ -224,11 +224,12 @@ def edit_post(request, post_id):
 
 
 @login_required()
-def delete_photo(request, pk):
+def delete_post_photo(request):
+    pk = request.POST.get("image_id")
     photo = get_object_or_404(Image, id=pk)
     photo.delete()
-    post = photo.post
-    return redirect("blog:edit_post", post_id = post.id)
+    response_data = {"image_id": pk}
+    return JsonResponse(response_data)
 
 
 @login_required()

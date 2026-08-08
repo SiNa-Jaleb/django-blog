@@ -25,7 +25,7 @@ urlpatterns = [
 
     path("profile/create-post/", views.create_post, name="create_post"),
     path("profile/edit-post/<int:post_id>/", views.edit_post, name="edit_post"),
-    path("profile/edit-post/delete-photo/<int:pk>", views.delete_photo, name="delete_photo"),
+    path("profile/edit-post/delete-photo/", views.delete_post_photo, name="delete_post_photo"),
 
 
     path("password-reset/", auth_views.PasswordResetView.as_view(success_url=reverse_lazy('blog:password_reset_done')), name="password_reset"),
