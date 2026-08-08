@@ -158,12 +158,14 @@ def edit_account(request):
     return render(request, "blog/profile.html", context)
 
 
+@require_POST
 @login_required
-def delete_post(request, post_id):
+def delete_post(request):
+    post_id = request.POST.get("post_id")
     post = Post.objects.get(id=post_id)
     post.delete()
-    messages.success(request, f"پست {post.title} با موفقیت حذف شد!")
-    return redirect("blog:profile")
+    response_data = {"post_id": post_id, "messages":f"پست {post.title} با موفقیت حذف شد!"}
+    return JsonResponse(response_data)
 
 
 class PasswordChange(PasswordChangeView):
