@@ -228,12 +228,14 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
-                            <!-- دکمه نمایش بیشتر -->
-                            <div class="mt-4 text-center">
-                                <button id="show-more-posts-btn" type="button" class="bg-[#161f33] hover:bg-lime-500/10 border border-slate-700/60 hover:border-lime-500/40 text-slate-300 hover:text-lime-400 font-medium px-5 py-2 rounded-xl text-xs transition duration-200">
-                                    نمایش بیشتر
-                                </button>
-                            </div>
+                            {% if has_more_post %}
+                            	<!-- دکمه نمایش بیشتر -->
+                                <div class="mt-4 text-center">
+                                    <button id="show-more-posts-btn" type="button" class="bg-[#161f33] hover:bg-lime-500/10 border border-slate-700/60 hover:border-lime-500/40 text-slate-300 hover:text-lime-400 font-medium px-5 py-2 rounded-xl text-xs transition duration-200">
+                                        نمایش بیشتر
+                                    </button>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -274,6 +276,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
             $(document).ready(function () {
+
                 $(".delete-post-button").click(function () {
                     if (!confirm("آیا از حذف این مقاله اطمینان دارید؟")) return;
                     let postId = $(this).closest(".post-row").data("post-id");
@@ -297,15 +300,19 @@
 
                 let page = 1;
                 $("#show-more-posts-btn").click(function () {
-                    let post_list = $(".post-list")
+                    let post_list = $(".post-list");
+                    let button = $(this);
 
                     $.ajax({
                     type: "GET",
                     url: "{% url 'blog:profile' %}" + "?page=" + page,
-                    dataType: "html",
+                    dataType: "json",
                     success: function (data) {
-                        post_list.append(data);
+                        post_list.append(data.html);
                         page++;
+                        if (!data.has_next) {
+                            button.hide();
+                        }
                         },
                     });
                 });

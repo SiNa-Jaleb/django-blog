@@ -153,10 +153,12 @@ def profile(request):
     print(show_more_post)
 
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
-        return render(request, "blog/post_list_ajax.html", {"show_more_post": show_more_post})
+        html = render_to_string("blog/post_list_ajax.html", {"show_more_post": show_more_post}, request)
+        response_data = {"html": html, "has_next":show_more_post.has_next()}
+        return JsonResponse(response_data)
 
     comments = Comment.published.filter(post__author=user)
-    context = {"user": user, "default_showing_post": default_showing_post, "comments":comments}
+    context = {"user": user, "default_showing_post": default_showing_post, "comments":comments, "has_more_post":paginator.count>0}
     return render(request, "blog/profile.html", context)
 
 
