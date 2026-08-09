@@ -52,7 +52,8 @@ def post_detail(request, post_id):
     post_tags_id = post.tags.values_list("id", flat=True)
     similar_posts =  Post.objects.filter(tags__id__in=post_tags_id).exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("same_tags")[:3]
-    context = {"post": post, "form": form, "comments": comments, "similar_posts":similar_posts}
+    post_url = request.build_absolute_uri(post.get_absolute_url())
+    context = {"post": post, "form": form, "comments": comments, "similar_posts":similar_posts, "post_url":post_url}
     return render(request, "blog/post_detail.html", context)
 
 
