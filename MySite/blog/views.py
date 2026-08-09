@@ -138,21 +138,25 @@ def register(request):
 def profile(request):
     user = request.user
     posts = Post.objects.filter(author=user)
-    paginator = Paginator(posts, 2)
+
+    default_showing_post = posts[:4]
+    show_more_post = posts[4:]
+    paginator = Paginator(show_more_post, 2)
     page_num = request.GET.get("page",1)
 
     try:
-        posts = paginator.page(page_num)
+        show_more_post = paginator.page(page_num)
     except PageNotAnInteger:
-        posts = paginator.page(1)
+        show_more_post = paginator.page(1)
     except EmptyPage:
-        posts = []
+        show_more_post = []
+    print(show_more_post)
 
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-        return render(request, "blog/post_list_ajax.html", {"posts": posts})
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "blog/post_list_ajax.html", {"show_more_post": show_more_post})
 
     comments = Comment.published.filter(post__author=user)
-    context = {"user": user, "posts": posts, "comments":comments}
+    context = {"user": user, "default_showing_post": default_showing_post, "comments":comments}
     return render(request, "blog/profile.html", context)
 
 
