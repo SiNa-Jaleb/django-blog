@@ -1,9 +1,10 @@
 from multiprocessing import context
 from django import template
 from django.db.models.aggregates import Sum
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from ..models import Post, Comment, User
-from django.db.models import Count
+from django.db.models import Count, Q
 from django_jalali.templatetags.jformat import jformat
 from markdown import markdown
 from django.utils.safestring import mark_safe
@@ -57,7 +58,14 @@ def remove_markdown_sing(text):
 
 @register.inclusion_tag("partials/more_info_pp.html")
 def more_info_pp(user_id):
-    user = get_object_or_404(User.objects.annotate(t__study=Sum("posts__study")), id=user_id)
+    user = get_object_or_404(User.objects.annotate(
+        t__study=Coalesce(
+            Sum(
+                "posts__study", filter=Q(posts__status=Post.Status.PUBLISHED)
+            ),
+            0
+        )
+    ), id=user_id)
     total_post = Post.published.filter(author=user).count()
     context = {"total_post": total_post, "user": user}
     return context
