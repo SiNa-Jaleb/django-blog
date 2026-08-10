@@ -138,27 +138,45 @@ def register(request):
 def profile(request):
     user = request.user
     posts = Post.objects.filter(author=user)
+    comments = Comment.published.filter(post__author=user)
 
+    # pagination for load more in post list
     default_showing_post = posts[:4]
     show_more_post = posts[4:]
     paginator = Paginator(show_more_post, 2)
     page_num = request.GET.get("page",1)
-
     try:
         show_more_post = paginator.page(page_num)
     except PageNotAnInteger:
         show_more_post = paginator.page(1)
     except EmptyPage:
         show_more_post = []
-    print(show_more_post)
 
+    # pagination for load more in comments list
+    default_showing_comment = comments[:6]
+    show_more_comment = comments[6:]
+    comment_paginator = Paginator(show_more_comment, 2)
+    comment_page_num = request.GET.get("page",1)
+    try:
+        show_more_comment = comment_paginator.page(comment_page_num)
+    except PageNotAnInteger:
+        show_more_comment = comment_paginator.page(1)
+    except:
+        show_more_comment = []
+
+    load = request.GET.get("load")
+    # checking request if ajax for pagination
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
-        html = render_to_string("blog/post_list_ajax.html", {"show_more_post": show_more_post}, request)
-        response_data = {"html": html, "has_next":show_more_post.has_next()}
-        return JsonResponse(response_data)
+        if load == "posts":
+            html = render_to_string("blog/post_list_ajax.html", {"show_more_post": show_more_post}, request)
+            response_data = {"html": html, "has_next":show_more_post.has_next()}
+            return JsonResponse(response_data)
+        elif load == "comments":
+            comment_html = render_to_string("blog/comment_list_ajax.html", {"show_more_commebt":show_more_comment}, request)
+            response_data = {"comment_html":comment_html, "has_next_comment":show_more_comment.has_next()}
+            return JsonResponse(response_data)
 
-    comments = Comment.published.filter(post__author=user)
-    context = {"user": user, "default_showing_post": default_showing_post, "comments":comments, "has_more_post":paginator.count>0}
+    context = {"user": user, "default_showing_post": default_showing_post, "default_showing_comment":default_showing_comment, "has_more_post":paginator.count>0, "hase_more_comment":comment_paginator.count>0}
     return render(request, "blog/profile.html", context)
 
 

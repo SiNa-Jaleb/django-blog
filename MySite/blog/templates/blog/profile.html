@@ -253,7 +253,7 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-800/40">
-                                {% for comment in comments %}
+                                {% for comment in default_showing_comment %}
                                     <tr class="hover:bg-[#111726]/30 transition">
                                         <td class="p-3 font-medium text-lime-400">{{ comment.author|truncatewords:2 }}</td>
                                         <td class="p-3 text-slate-300 max-w-xs truncate">{{ comment.text|truncatewords:7 }}</td>
@@ -305,7 +305,7 @@
 
                     $.ajax({
                     type: "GET",
-                    url: "{% url 'blog:profile' %}" + "?page=" + page,
+                    url: "{% url 'blog:profile' %}" + "?load=posts&page=" + page,
                     dataType: "json",
                     success: function (data) {
                         post_list.append(data.html);
