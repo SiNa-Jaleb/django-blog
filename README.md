@@ -62,6 +62,9 @@ Ensure you have Python installed on your system. PostgreSQL is required for data
    DB_PASSWORD=your_password
    DB_HOST=127.0.0.1
    DB_PORT=5432
+
+   EMAIL_HOST_USER=your_gmail
+   EMAIL_HOST_PASSWORD=your_gmail_app_password
    ```
 
 5. Run database migrations:
