@@ -252,7 +252,7 @@
                                     <th class="p-3 text-center">تاریخ</th>
                                 </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800/40">
+                                <tbody class="comment-list divide-y divide-slate-800/40">
                                 {% for comment in default_showing_comment %}
                                     <tr class="hover:bg-[#111726]/30 transition">
                                         <td class="p-3 font-medium text-lime-400">{{ comment.author|truncatewords:2 }}</td>
@@ -263,10 +263,16 @@
                                 {% empty %}
                                     <h2 class="neon-border-focus">کامنتی برای نمایش وجود ندارد</h2>
                                 {% endfor %}
-
-
                                 </tbody>
                             </table>
+                            {% if hase_more_comment %}
+                            	<!-- دکمه نمایش بیشتر -->
+                                <div class="mt-4 text-center">
+                                    <button id="show-more-comment-btn" type="button" class="bg-[#161f33] hover:bg-lime-500/10 border border-slate-700/60 hover:border-lime-500/40 text-slate-300 hover:text-lime-400 font-medium px-5 py-2 rounded-xl text-xs transition duration-200">
+                                        نمایش بیشتر
+                                    </button>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -298,21 +304,40 @@
                     });
                 });
 
-                let page = 1;
+                let post_page = 1;
                 $("#show-more-posts-btn").click(function () {
                     let post_list = $(".post-list");
                     let button = $(this);
 
                     $.ajax({
                     type: "GET",
-                    url: "{% url 'blog:profile' %}" + "?load=posts&page=" + page,
+                    url: "{% url 'blog:profile' %}" + "?load=posts&page=" + post_page,
                     dataType: "json",
                     success: function (data) {
                         post_list.append(data.html);
-                        page++;
+                        post_page++;
                         if (!data.has_next) {
                             button.hide();
-                        }
+                            }
+                        },
+                    });
+                });
+
+                let comment_page = 1;
+                $("#show-more-comment-btn").click(function () {
+                    let comment_list = $(".comment-list");
+                    let button = $(this);
+
+                    $.ajax({
+                    type: "GET",
+                    url: "{% url 'blog:profile' %}" + "?load=comments&page=" + comment_page,
+                    dataType: "json",
+                    success: function (data) {
+                        comment_list.append(data.comment_html);
+                        comment_page++;
+                        if (!data.has_next_comment) {
+                            button.hide();
+                            }
                         },
                     });
                 });

@@ -172,7 +172,7 @@ def profile(request):
             response_data = {"html": html, "has_next":show_more_post.has_next()}
             return JsonResponse(response_data)
         elif load == "comments":
-            comment_html = render_to_string("blog/comment_list_ajax.html", {"show_more_commebt":show_more_comment}, request)
+            comment_html = render_to_string("blog/comment_list_ajax.html", {"show_more_comment":show_more_comment}, request)
             response_data = {"comment_html":comment_html, "has_next_comment":show_more_comment.has_next()}
             return JsonResponse(response_data)
 

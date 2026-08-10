@@ -1,0 +1,9 @@
+{% load jformat %}
+{% for comment in show_more_comment %}
+    <tr class="hover:bg-[#111726]/30 transition">
+        <td class="p-3 font-medium text-lime-400">{{ comment.author|truncatewords:2 }}</td>
+        <td class="p-3 text-slate-300 max-w-xs truncate">{{ comment.text|truncatewords:7 }}</td>
+        <td class="p-3 text-slate-400 max-w-xs truncate"><a href="{{ comment.post.get_absolute_url }}" class="hover:text-white transition">{{ comment.post|truncatewords:7 }}</a></td>
+        <td class="p-3 text-center text-slate-500 font-mono">{{ comment.create|jformat:"%Y/%m/%d" }}</td>
+    </tr>
+{% endfor %}
