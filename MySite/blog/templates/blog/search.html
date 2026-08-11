@@ -1,6 +1,7 @@
 {% extends 'parent/base.html' %}
 {% load jformat %}
 {% load blog_tags %}
+{% load thumbnail %}
 {% block title %}
     لیست پست ها
 {% endblock %}
@@ -111,7 +112,7 @@
                             <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
                                 <a href="{{ post.get_absolute_url }}">
                                     <div class="w-full h-48 overflow-hidden bg-slate-900 relative">
-                                        <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                        <img src="{% thumbnail post.images.first.image_file 600x192 quality=95 %}" alt="{{ post.images.first }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
                                         <span class="absolute top-3 right-3 bg-lime-500 text-darkbg font-bold text-[11px] px-2 py-1 rounded shadow">{{ post.category }}</span>
                                     </div>
                                 </a>

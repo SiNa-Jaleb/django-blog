@@ -2,6 +2,7 @@
 {% load static %}
 {% load blog_tags %}
 {% load jformat %}
+{% load thumbnail %}
 {% block title %}
     پروفایل
 {% endblock %}
@@ -32,7 +33,7 @@
                 <div class="bg-[#0b0f19] border border-slate-800/80 rounded-2xl p-6 text-center neon-shadow-lime">
                     <div class="relative w-28 h-28 mx-auto mb-4">
                         {% if user.photo %}
-                            <img src="{{ user.photo.url }}" alt="{{ user }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
+                            <img src="{% thumbnail user.photo 256x256 quality=80 %}" alt="{{ user }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
                         {% else %}
                             <img src="{% static 'images/ava.jpeg' %}" alt="{{ user.username }}" class="w-full h-full bg-[#161f33] rounded-full border-2 border-lime-400/50 p-1 object-cover" />
                         {% endif %}

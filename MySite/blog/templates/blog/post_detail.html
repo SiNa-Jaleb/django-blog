@@ -2,6 +2,7 @@
 {% load static %}
 {% load jformat %}
 {% load blog_tags %}
+{% load thumbnail %}
 {% block title %}
     جزئیات پست
 {% endblock %}
@@ -116,7 +117,7 @@
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
         <article>
             <div class="w-full h-64 md:h-[400px] rounded-2xl overflow-hidden mb-8 relative border border-slate-800">
-                <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first }}" class="w-full h-full object-cover" />
+                <img src="{% thumbnail post.images.first.image_file 1000x400 quality=100 %}" alt="{{ post.images.first }}" class="w-full h-full object-cover" />
                 <div class="absolute inset-0 bg-gradient-to-t map-bg from-darkbg via-transparent to-transparent opacity-90"></div>
                 <span class="absolute bottom-4 right-4 bg-lime-500 text-darkbg font-bold text-xs px-3 py-1 rounded-full shadow-lg shadow-lime-500/20">{{ post.category }}</span>
             </div>
@@ -181,7 +182,7 @@
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                             {% for img in post.images.all|slice:'1:' %}
                                 <div class="group relative rounded-xl overflow-hidden border border-slate-800 h-28 md:h-36 bg-slate-950">
-                                    <img src="{{ img.image_file.url }}" alt="{{ img }}" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition duration-300 cursor-zoom-in" />
+                                    <img src="{% thumbnail img.image_file 400x144 quality=95 %}" alt="{{ img }}" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition duration-300 cursor-zoom-in" />
                                 </div>
                             {% endfor %}
                         </div>
@@ -214,7 +215,7 @@
                     <div class="flex-shrink-0">
                         <div class="w-16 h-16 rounded-full bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-lime-400 font-extrabold text-lg shadow-inner shadow-black overflow-hidden">
                             <!-- در آینده اینجا تگ img قرار می‌گیرد، فعلاً به عنوان پیش‌فرض حرف اول نام نویسنده است -->
-                            <a href="{% url 'blog:public_profile' post.author.id %}"><img src="{{ user.photo.url }}" alt="{{ user.username }}"></a>
+                            <a href="{% url 'blog:public_profile' post.author.id %}"><img src="{% thumbnail user.photo 128x128 quality=80 %}" alt="{{ user.username }}"></a>
                         </div>
                     </div>
 
@@ -254,7 +255,7 @@
                         <article class="bg-[#151f32] rounded-xl overflow-hidden border border-slate-800/60 flex flex-col justify-between transition-all duration-300 neon-glow group">
                             <a href="{{ sim_post.get_absolute_url }}">
                                 <div class="w-full h-36 overflow-hidden bg-slate-900 relative">
-                                    <img src="{{ sim_post.images.first.image_file.url }}" alt="{{ sim_post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
+                                    <img src="{% thumbnail sim_post.images.first.image_file 400x225 quality=95 %}" alt="{{ sim_post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80 group-hover:opacity-100" />
                                     <span class="absolute top-2.5 right-2.5 bg-lime-500 text-darkbg font-bold text-[10px] px-2 py-0.5 rounded shadow">{{ sim_post.category }}</span>
                                 </div>
                             </a>
@@ -317,7 +318,7 @@
                                     <div class="flex items-center gap-2.5">
                                         <div class="w-8 h-8 rounded-full bg-lime-500/10 border border-lime-500/20 text-lime-400 flex items-center justify-center font-bold overflow-hidden">
                                             {% if comment.author.photo %}
-                                                <img src="{{ comment.author.photo.url }}" alt="{{ comment.author }}" class="w-full h-full object-cover">
+                                                <img src="{% thumbnail comment.author.photo 64x64 quality=70 %}" alt="{{ comment.author }}" class="w-full h-full object-cover">
                                             {% else %}
                                                 <span class="text-xs">{{ comment.author.username|slice:":1" }}</span>
                                             {% endif %}
