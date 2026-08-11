@@ -48,12 +48,12 @@ def post_list(request, category=None, tag_slug=None):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    post = get_object_or_404(Post.published.prefetch_related("tags", "images", "likes").select_related("author"), id=post_id, status=Post.Status.PUBLISHED)
     form = CommentForm()
-    comments = post.comments.filter(active=True)
+    comments = post.comments.filter(active=True).select_related("author")
     post_tags_id = post.tags.values_list("id", flat=True)
-    similar_posts =  Post.objects.filter(tags__id__in=post_tags_id).exclude(id=post.id)
-    similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("same_tags")[:3]
+    similar_posts =  Post.published.select_related("author").prefetch_related("tags", "images").filter(tags__id__in=post_tags_id).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("-same_tags")[:3]
     post_url = request.build_absolute_uri(post.get_absolute_url())
     context = {"post": post, "form": form, "comments": comments, "similar_posts":similar_posts, "post_url":post_url}
     return render(request, "blog/post_detail.html", context)
