@@ -96,7 +96,7 @@ def search(request):
             search_rank = SearchRank(search_vector, search_query)
 
             result = (
-                Post.published.annotate(search=search_vector, rank=search_rank)
+                Post.published.prefetch_related("images", "tags").select_related("author").annotate(search=search_vector, rank=search_rank)
                 .filter(search=search_query)
                 .order_by("id", "-rank")
                 .distinct("id")
