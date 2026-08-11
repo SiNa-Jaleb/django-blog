@@ -23,12 +23,14 @@ def index(request):
 
 
 def post_list(request, category=None, tag_slug=None):
+
+    posts = Post.published.prefetch_related("tags", "images").select_related("author")
     if category is not None:
-        posts = Post.published.filter(category=category)
+        posts = posts.filter(category=category)
     elif tag_slug is not None:
-        posts = Post.objects.filter(tags__slug=tag_slug)
+        posts = posts.filter(tags__slug=tag_slug)
     else:
-        posts = Post.published.all()
+        posts = posts.all()
 
     paginator = Paginator(posts, 4)
     page_number = request.GET.get("page", 1)
