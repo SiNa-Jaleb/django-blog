@@ -64,8 +64,8 @@ def more_info_pp(user_id):
                 "posts__study", filter=Q(posts__status=Post.Status.PUBLISHED)
             ),
             0
-        )
+        ),
+        total_post=Count("posts", filter=Q(posts__status=Post.Status.PUBLISHED)),
     ), id=user_id)
-    total_post = Post.published.filter(author=user).count()
-    context = {"total_post": total_post, "user": user}
+    context = {"total_post": user.total_post, "user": user}
     return context

@@ -299,7 +299,7 @@ def ticket(request):
 
 def public_profile(request, pk):
     user = get_object_or_404(User, id=pk)
-    posts = Post.published.filter(author=user)
+    posts = Post.published.prefetch_related("tags", "images").select_related("author").filter(author=user)
 
     paginator = Paginator(posts, 4)
     page_number = request.GET.get('page', 1)
