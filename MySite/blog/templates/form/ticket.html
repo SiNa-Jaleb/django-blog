@@ -1,4 +1,5 @@
 {% extends "parent/base.html" %}
+{% load jformat %}
 
 {% block title %}
     تیکت
@@ -64,6 +65,24 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
+                <div class="space-y-4 lg:col-span-1">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1">تیکت‌های اخیر شما</h2>
+
+                    <div class="space-y-3 max-h-[550px] overflow-y-auto pr-1">
+
+                        {% for ticket in tickets %}
+                            <div class="bg-darkcard border border-slate-800 hover:border-slate-700/80 p-4 rounded-xl cursor-pointer transition group">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="{% if ticket.status == "RE" %}text-[10px] px-2 py-0.5 rounded-full font-medium bg-lime-500/10 text-lime-400 border border-lime-500/20{% else %}text-[10px] px-2 py-0.5 rounded-full font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20{% endif %} ">{% if ticket.status == "RE" %}در حال بررسی{% else %}پاسخ داده شد{% endif %}</span>
+                                <span class="text-[10px] text-slate-500">{{ ticket.creat|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                            </div>
+                            <h3 class="text-xs font-bold text-white group-hover:text-lime-400 transition truncate">{{ ticket.problem }}</h3>
+                            <p class="text-[11px] text-slate-400 mt-1">بخش: {{ ticket.subject }}</p>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
 
 
                 <div class="lg:col-span-2">

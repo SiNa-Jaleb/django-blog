@@ -281,11 +281,14 @@ def delete_post_photo(request):
 
 @login_required()
 def ticket(request):
+    user = request.user
+    tickets = user.tickets.all()
+
     if request.method == "POST":
         form = TicketForm(request.POST)
         if form.is_valid():
             tik = form.save(commit=False)
-            tik.author = request.user
+            tik.author = user
             tik.save()
 
             images_received = request.FILES.getlist("images")
@@ -298,7 +301,7 @@ def ticket(request):
     else:
         form = TicketForm()
 
-    return render(request, "form/ticket.html", {"form": form})
+    return render(request, "form/ticket.html", {"form": form, "tickets":tickets})
 
 
 def public_profile(request, pk):
