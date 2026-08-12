@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -52,8 +52,12 @@ def post_detail(request, post_id):
     form = CommentForm()
     comments = post.comments.filter(active=True).select_related("author")
     post_tags_id = post.tags.values_list("id", flat=True)
-    similar_posts =  Post.published.select_related("author").prefetch_related("tags", "images").filter(tags__id__in=post_tags_id).exclude(id=post.id)
-    similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("-same_tags")[:3]
+    similar_posts = (Post.published
+                     .prefetch_related("images", "tags")
+                     .select_related("author")
+                     .annotate(same_tags=Count("tags", filter=Q(tags__id__in=post_tags_id)))
+                     .exclude(id=post.id)
+                     .order_by("-same_tags").filter(same_tags__gt=0)[:3])
     post_url = request.build_absolute_uri(post.get_absolute_url())
     context = {"post": post, "form": form, "comments": comments, "similar_posts":similar_posts, "post_url":post_url}
     return render(request, "blog/post_detail.html", context)
