@@ -42,7 +42,7 @@ def most_active_user():
 
 @register.inclusion_tag("partials/lastest_post.html")
 def lastest_post(count=3):
-    l_post = Post.published.order_by("-publish")[:count]
+    l_post = Post.published.prefetch_related("images", "tags").select_related("author").order_by("-publish")[:count]
     context = {"l_post": l_post}
     return context
 
