@@ -43,3 +43,6 @@ dist/
 
 
 TODO.txt
+
+*.swp
+*.swo
