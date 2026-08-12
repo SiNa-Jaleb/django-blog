@@ -140,7 +140,7 @@ def register(request):
 def profile(request):
     user = request.user
     posts = Post.objects.filter(author=user)
-    comments = Comment.published.filter(post__author=user)
+    comments = Comment.published.select_related("author", "post").filter(post__author=user)
 
     # pagination for load more in post list
     default_showing_post = posts[:4]
