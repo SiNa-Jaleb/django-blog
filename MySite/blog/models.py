@@ -153,6 +153,7 @@ class Ticket(models.Model):
     problem = models.CharField(max_length=250, verbose_name="مشکل")
     creat = jmodels.jDateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.REVIEW, verbose_name="وضعیت")
+    answer = models.TextField(verbose_name="پاسخ", blank=True, null=True)
 
     class Meta:
         ordering=["-creat"]
