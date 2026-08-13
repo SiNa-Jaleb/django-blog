@@ -71,15 +71,41 @@
                     <div class="space-y-3 max-h-[550px] overflow-y-auto pr-1">
 
                         {% for ticket in tickets %}
+                        <a href="{% url "blog:ticket_detail" ticket.id %}" class="block">
                             <div class="bg-darkcard border border-slate-800 hover:border-slate-700/80 p-4 rounded-xl cursor-pointer transition group">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="{% if ticket.status == "RE" %}text-[10px] px-2 py-0.5 rounded-full font-medium bg-lime-500/10 text-lime-400 border border-lime-500/20{% else %}text-[10px] px-2 py-0.5 rounded-full font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20{% endif %} ">{% if ticket.status == "RE" %}در حال بررسی{% else %}پاسخ داده شد{% endif %}</span>
-                                <span class="text-[10px] text-slate-500">{{ ticket.creat|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                                <div class="flex items-center justify-between mb-2">
+                                    {% if ticket.status == "RE" %}
+                                        <span class="text-[10px] px-2.5 py-1 rounded-full font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20 inline-flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                            در حال بررسی
+                                        </span>
+                                    {% else %}
+                                        <span class="text-[10px] px-2.5 py-1 rounded-full font-medium bg-green-500/10 text-green-400 border border-green-500/20 inline-flex items-center gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                                            پاسخ داده شد
+                                        </span>
+                                    {% endif %}
+
+                                    <span class="text-[10px] text-slate-500 font-mono">{{ ticket.creat|jformat:'%H:%M - %Y/%m/%d' }}</span>
+                                </div>
+
+                                <h3 class="text-xs font-bold text-white group-hover:text-lime-400 transition truncate mb-1">
+                                    {{ ticket.problem }}
+                                </h3>
+
+                                <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2 pt-2 border-t border-slate-800/50">
+                                    <span>بخش: <strong class="text-slate-300 font-normal">{{ ticket.subject }}</strong></span>
+                                    
+                                    <span class="text-[10px] text-slate-500 group-hover:text-lime-400 transition flex items-center gap-1">
+                                        مشاهده
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 rotate-180">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
-                            <h3 class="text-xs font-bold text-white group-hover:text-lime-400 transition truncate">{{ ticket.problem }}</h3>
-                            <p class="text-[11px] text-slate-400 mt-1">بخش: {{ ticket.subject }}</p>
-                        </div>
-                        {% endfor %}
+                        </a>
+                    {% endfor %}
 
                     </div>
                 </div>

@@ -307,7 +307,7 @@ def ticket(request):
 @login_required()
 def ticket_detail(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    return render(request, "blog/ticket_detail.hmtl")
+    return render(request, "blog/ticket_detail.html", {"ticket": ticket})
 
 
 def public_profile(request, pk):
