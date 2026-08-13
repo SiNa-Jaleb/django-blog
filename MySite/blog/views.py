@@ -304,6 +304,12 @@ def ticket(request):
     return render(request, "form/ticket.html", {"form": form, "tickets":tickets})
 
 
+@login_required()
+def ticket_detail(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    return render(request, "blog/ticket_detail.hmtl")
+
+
 def public_profile(request, pk):
     user = get_object_or_404(User, id=pk)
     posts = Post.published.prefetch_related("tags", "images").select_related("author").filter(author=user)
